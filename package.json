@@ -1,0 +1,239 @@
+{
+  "name": "alitacode",
+  "displayName": "Alita Code",
+  "description": "Your Vitrual Coding Assistant, to help you write better code faster",
+  "version": "0.2.0",
+  "icon": "images/128x128.png",
+  "publisher": "ProjectAlita",
+  "engines": {
+    "vscode": "^1.78.0"
+  },
+  "categories": [
+    "Other", "Machine Learning"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "repository": "https://github.com/ProjectAlita/alitacode.git",
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "alitacode.predict",
+        "title": "Alita: Predict"
+      },
+      {
+        "command": "alitacode.suggest",
+        "title": "Alita: Similarity"
+      },
+      {
+        "command": "alitacode.createPrompt",
+        "title": "Alita: Create Prompt"
+      },
+      {
+        "command": "alitacode.addContext",
+        "title": "Alita: Extend Context"
+      },
+      {
+        "command": "alitacode.syncPrompts",
+        "title": "Alita: Sync External Prompts"
+      },
+      {
+        "command": "alitacode.syncEmbeddings",
+        "title": "Alita: Sync Embeddings"
+      },
+      {
+        "command": "alitacode.initAlita",
+        "title": "Alita: Init"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "when": "editorFocus && !editorReadonly",
+          "submenu": "alitacode.submenu",
+          "group": "Alita"
+        }
+      ],
+      "alitacode.submenu": [
+        {
+          "when": "editorHasSelection && editorFocus && !editorReadonly && alita.init",
+          "command": "alitacode.predict"
+        },
+        {
+          "when": "editorFocus && !editorReadonly && alita.init && alitacode.LocalPrompts",
+          "command": "alitacode.createPrompt"
+        },
+        {
+          "when": "editorFocus && !alita.init && alitacode.LLMProvider != 'None'",
+          "command": "alitacode.initAlita"
+        },
+        {
+          "when": "editorHasSelection && editorFocus && !editorReadonly && alita.init && alitacode.LocalPrompts",
+          "command": "alitacode.addContext"
+        },
+        {
+          "when": "editorHasSelection && editorFocus && !editorReadonly && alita.init && alitacode.LLMProvider == 'Alita'",
+          "command": "alitacode.suggest"
+        },
+        {
+          "when": "alita.init && alitacode.LLMProvider == 'Alita'",
+          "command": "alitacode.syncEmbeddings"
+        },
+        {
+          "when": "alita.init && alitacode.LLMProvider in alitacode.ExtentablePlatforms",
+          "command": "alitacode.syncPrompts"
+        }
+      ]
+    },
+    "submenus": [
+      {
+        "id": "alitacode.submenu",
+        "label": "Alita"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "alitacode.predict",
+        "key": "ctrl+shift+r"
+      }
+    ],
+    "configuration": {
+      "title": "AlitaCode",
+      "properties": {
+        "alitacode.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable this extension"
+        },
+        "alitacode.providerServerURL": {
+          "type": "string",
+          "default": "",
+          "description": "URL to LLM service provider if applicable",
+          "order": 2
+        },
+        "alitacode.authToken": {
+          "order": 3,
+          "type": "string",
+          "default": "",
+          "description": "This is API Key or Bearer token for LLM service provider if applicable"
+        },
+        "alitacode.serviceProviderForLLM": {
+          "order": 1,
+          "type": "string",
+          "default": "None",
+          "enum": [
+            "None",
+            "Alita",
+            "Azure OpenAI",
+            "OpenAI",
+            "DigitalPlatform"
+          ],
+          "description": "Select the LLM provider to be used with Alita"
+        },
+        "alitacode.apiVersion": {
+          "order": 4,
+          "type": "string",
+          "default": "2023-03-15-preview",
+          "description": "Api version, mostly applicable for Azure OpenAI compatible APIs"
+        },
+        "alitacode.modelName": {
+          "order": 5,
+          "type": "string",
+          "default": "gpt-35-turbo",
+          "enum": [
+            "gpt-3.5-turbo",
+            "gpt-4",
+            "text-bison@001",
+            "code-bison@001",
+            "amazon.titan-tg1-large",
+            "anthropic.claude-v2",
+            "ai21.j2-jumbo-instruct"
+          ],
+          "description": "Model name used for local prompts"
+        },
+        "alitacode.projectId": {
+          "order": 6,
+          "type": "number",
+          "default": 1,
+          "description": "Project Id in Alita Backened, ignored for OpenAI"
+        },
+        "alitacode.integrationUid": {
+          "order": 7,
+          "type": "string",
+          "default": "Integration UUID goes here",
+          "description": "AI integration Id from Alita Backened, ignored for OpenAI"
+        },
+        "alitacode.topP": {
+          "order": 8,
+          "label": "Top P default value",
+          "type": "number",
+          "default": 0.8,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Top P value for the model"
+        },
+        "alitacode.temperature": {
+          "order": 9,
+          "label": "Temperature default value",
+          "type": "number",
+          "default": 0.8,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Temperature value for the model"
+        },
+        "alitacode.maxTokens": {
+          "order": 10,
+          "label": "Max Tokens default value",
+          "type": "number",
+          "default": 1024,
+          "minimum": 1,
+          "maximum": 8096,
+          "description": "Max tokens value for the model"
+        },
+        "alitacode.topK": {
+          "order": 11,
+          "label": "Top K default value",
+          "type": "number",
+          "default": 40,
+          "minimum": 1,
+          "maximum": 40,
+          "description": "Top K value for the model"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "lint": "prettier --write . && eslint .",
+    "pretest": "npm run lint",
+    "test": "node ./test/runTest.js",
+    "esbuild-base": "esbuild ./extension.js --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "npm run esbuild-base -- --sourcemap",
+    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+    "prevsce": "npm run esbuild-base -- --minify",
+    "vsce": "vsce package",
+    "publish": "vsce publish"
+  },
+  "dependencies": {
+    "@azure/openai": "^1.0.0-beta.3",
+    "axios": "^1.4.0",
+    "form-data": "^4.0.0",
+    "squirrelly": "7.9.2",
+    "yaml": "^2.3.2"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "20.2.5",
+    "@types/vscode": "^1.78.0",
+    "@vscode/test-electron": "^2.3.2",
+    "@vscode/vsce": "^2.19.0",
+    "esbuild": "^0.18.11",
+    "eslint": "^8.41.0",
+    "eslint-config-prettier": "^8.8.0",
+    "glob": "^8.1.0",
+    "mocha": "^10.2.0",
+    "prettier": "^2.8.8",
+    "typescript": "^5.1.3"
+  }
+}
