@@ -25,9 +25,21 @@ module.exports = class WorkspaceService {
       LLMProvider: workspace
         .getConfiguration(WORKSPACE.EXTENSION.NAME)
         .get(WORKSPACE.EXTENSION.PARAM.LLM_PROVIDER_TYPE),
+      DefaultViewMode: workspace
+        .getConfiguration(WORKSPACE.EXTENSION.NAME)
+        .get(WORKSPACE.EXTENSION.PARAM.DEFAULT_VIEW_MODE),
       LLMmodelName: workspace
         .getConfiguration(WORKSPACE.EXTENSION.NAME)
-        .get(WORKSPACE.EXTENSION.PARAM.LLM_MODEL_NAME),
+        .get(WORKSPACE.EXTENSION.PARAM.CUSTOM_MODEL_NAME) ? 
+        workspace
+        .getConfiguration(WORKSPACE.EXTENSION.NAME)
+        .get(WORKSPACE.EXTENSION.PARAM.CUSTOM_MODEL_NAME) :
+        workspace
+          .getConfiguration(WORKSPACE.EXTENSION.NAME)
+          .get(WORKSPACE.EXTENSION.PARAM.LLM_MODEL_NAME),
+      DEFAULT_TOKENS: workspace
+        .getConfiguration(WORKSPACE.EXTENSION.NAME)
+        .get(WORKSPACE.EXTENSION.PARAM.DEFAULT_TOKENS),
       LLMApiVersion: workspace
         .getConfiguration(WORKSPACE.EXTENSION.NAME)
         .get(WORKSPACE.EXTENSION.PARAM.LLM_API_VERSION),

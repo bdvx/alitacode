@@ -67,12 +67,22 @@ module.exports = class LlmServiceProvider {
     }
 
     getTemplateDefaults() {
-        return {
-            "vsLanguage": vscode.window.activeTextEditor.document.languageId,
-            "vsFileName": vscode.window.activeTextEditor.document.fileName,
-            "vsWorkspaceFolder": vscode.workspace.workspaceFolders[0].uri.fsPath,
-            "vsWorkspaceName": vscode.workspace.name,
+        try {
+            return {
+                "vsLanguage": vscode.window.activeTextEditor.document.languageId,
+                "vsFileName": vscode.window.activeTextEditor.document.fileName,
+                "vsWorkspaceFolder": vscode.workspace.workspaceFolders[0].uri.fsPath,
+                "vsWorkspaceName": vscode.workspace.name,
+            }
+        } catch (ex) {
+            return {
+                "vsLanguage": "",
+                "vsFileName": "",
+                "vsWorkspaceFolder": vscode.workspace.workspaceFolders[0].uri.fsPath,
+                "vsWorkspaceName": vscode.workspace.name,
+            }
         }
+        
     }
 
     async getPromptTemplate(config, template) {
@@ -186,22 +196,24 @@ module.exports = class LlmServiceProvider {
         );
     }
 
+    async clearEmbeddings() {
+        const { promptLib, workspacePath } = this.workspaceService.getWorkspaceConfig();
+        return await this.workspaceService.writeContent(
+            path.join(workspacePath, promptLib, "./embeddings.json"), "{}", true
+        );
+    }
+
     async addPrompt(promptName, promptDescription, context, examples=[], variables={}, overwrite=false){
         const { promptLib, workspacePath } = this.workspaceService.getWorkspaceConfig();
         const promptDetails = {"context": context, "examples": examples, "variables": variables}
         if (overwrite || this.checkPromptExists(promptName, promptDetails)) {
-            var iniPromptsMapping = await this.workspaceService.readContent(
-                path.join(workspacePath, promptLib, "./prompts.json"),
-                true
-            );
-            await this.removeExternalPrompts();
             var promptsMapping = await this.workspaceService.readContent(
                 path.join(workspacePath, promptLib, "./prompts.json"),
                 true
             );
             var userSettings = {}
-            if (iniPromptsMapping[promptName] != undefined && iniPromptsMapping[promptName].userSettings) {
-                userSettings = Object.assign({}, iniPromptsMapping[promptName].userSettings)
+            if (promptsMapping[promptName] != undefined && promptsMapping[promptName].userSettings) {
+                userSettings = Object.assign({}, promptsMapping[promptName].userSettings)
             }
             promptsMapping[promptName] = {
                 description: promptDescription,
@@ -219,6 +231,18 @@ module.exports = class LlmServiceProvider {
         } else {
             await vscode.window.showErrorMessage("Could not sync prompt, as it is already exists");
         }
+    }
+
+    async removePrompt(promptName){
+        const { promptLib, workspacePath } = this.workspaceService.getWorkspaceConfig();
+        var promptsMapping = await this.workspaceService.readContent(
+            path.join(workspacePath, promptLib, "./prompts.json"),
+            true
+        );
+        delete promptsMapping[promptName]
+        await this.workspaceService.writeContent(
+            path.join(workspacePath, promptLib, "./prompts.json"),
+            promptsMapping, true );
     }
 
     async addEmbedding(embeddingName, embeddingDescription, extension, top_k, cutoff){

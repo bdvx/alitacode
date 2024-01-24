@@ -1,4 +1,5 @@
 const vscode = require("vscode");
+const path = require("path");
 const LlmServiceProvider = require("./base.provider");
 
 
@@ -55,15 +56,27 @@ module.exports = class CarrierServiceProvider extends LlmServiceProvider {
 
     async syncPrompts() {
         const prompts = await this.getPrompts();
+        const _addedPrompts = []
         for(var i = 0; i < prompts.length; i++) {
             var prompt = prompts[i]
             var tags = prompt.tags.map((tag) => tag.tag.toLowerCase())
             if (tags.includes("code")) {
+                _addedPrompts.push(prompt.name)
                 await this.addPrompt(
                     prompt.name, 
                     prompt.description ? prompt.description : "" , 
                     {"prompt_id": prompt.id, "integration_uid": prompt.integration_uid}, [], {}, true
                 )   
+            }
+        }
+        const workspaceConfig = this.workspaceService.getWorkspaceConfig();
+        var promptsMapping = await this.workspaceService.readContent(
+            path.join(workspaceConfig.workspacePath, workspaceConfig.promptLib, "./prompts.json"),
+            true
+        );
+        for (const [key, value] of Object.entries(promptsMapping)) {
+            if (!_addedPrompts.includes(key) && value.external) {
+                await this.removePrompt(key)
             }
         }
     }
@@ -81,7 +94,7 @@ module.exports = class CarrierServiceProvider extends LlmServiceProvider {
         }
     }
 
-    async predict(template, prompt) {
+    async predict(template, prompt, prompt_template=undefined) {
         const config = this.workspaceService.getWorkspaceConfig();
         var prompt_data = {}
         var display_type = "append"
@@ -89,7 +102,7 @@ module.exports = class CarrierServiceProvider extends LlmServiceProvider {
             prompt_data = {
                 project_id: config.projectID,
                 prompt_id: template.prompt_id,
-                integration_uid: template.integration_uid,
+                integration_uid: template.integration_uid || config.integrationID,
                 input: prompt
             }
             if (template.userSettings) {
@@ -112,9 +125,10 @@ module.exports = class CarrierServiceProvider extends LlmServiceProvider {
                     prompt_data.model_name = template.userSettings.modelName    
                 }
             }
-            
         } else {
-            const prompt_template = await this.getPromptTemplate(config, template.template);
+            if (!prompt_template) {
+                prompt_template = await this.getPromptTemplate(config, template.template);
+            }
             prompt_data = {
                 integration_id: prompt_template.integration_id ? prompt_template.integration_id : config.integrationID,
                 project_id: config.projectID,
@@ -133,8 +147,13 @@ module.exports = class CarrierServiceProvider extends LlmServiceProvider {
             if (prompt_template.examples) {
                 prompt_data.examples = prompt_template.examples
             }
-            display_type = prompt_template.display_type ? prompt_template.display_type : "append"
+            if (prompt_template.chat_history) {
+                prompt_data.chat_history = prompt_template.chat_history
+            }
         }
+        display_type = (prompt_template && prompt_template.display_type) ? 
+                prompt_template.display_type : 
+                this.workspaceService.getWorkspaceConfig().DefaultViewMode;
         const response = await this.request(this.predictUrl)
             .method("POST")
             .headers({"Content-Type": "application/json",})
@@ -142,8 +161,9 @@ module.exports = class CarrierServiceProvider extends LlmServiceProvider {
             .auth(this.authType, this.authToken)
             .send();
              // escape $ sign as later it try to read it as template variable
+        const resp_data = response.data.messages.map((message) => message.content.replace(/\$/g, "\\$")).join("\n")
         return { 
-            "content": response.data.replace(/\$/g, "\\$"),
+            "content": resp_data,
             "type": display_type
         };
     }
