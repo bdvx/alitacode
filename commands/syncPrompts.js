@@ -4,7 +4,7 @@ const { alitaService, workspaceService } = require("../services");
 module.exports = async function () {
   try {
     alitaService.checkLLMConfig()
-    await alitaService.serviceProvider.init()
+    await alitaService.serviceProvider.syncPrompts()
     alitaService.init_done = 1;
     await workspaceService.updatePrompts()
   } catch (e) {

@@ -1,5 +1,6 @@
 # Alita Code
 
+
 Introducing AlitaCode for VSCode, the ultimate AI-powered IDE extension that revolutionizes the way you develop, test, and maintain your code. AlitaCode harnesses the power of generative AI to provide intelligent suggestions, streamline code implementation, and automate essential tasks, elevating your coding experience to new heights. With customizable internal and external prompts, AlitaCode offers an unparalleled level of adaptability, catering to your unique project needs and preferences.
 
 # Why AlitaCode?

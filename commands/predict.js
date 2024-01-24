@@ -36,7 +36,7 @@ module.exports = async function () {
         template: selection,
       }).then((answer) => {
         progress.report({ increment: 90 });
-        if (answer.type == "split")  {
+        if (answer.type  == "split")  {
           const editor = vscode.window.activeTextEditor;
           const languageId = editor.document.languageId
           vscode.workspace.openTextDocument({ language: languageId }).then(doc => {
@@ -46,23 +46,28 @@ module.exports = async function () {
               })
             })
           })
-        } else if (answer.type == "replace") {
+        } else if (answer.type  == "replace") {
           vscode.window.activeTextEditor.edit(editBuilder => {
             editBuilder.replace(
               new vscode.Range(sel_start, sel_end),
               answer.content
             );
           });
+        } else if (answer.type  == "prepend") {
+          vscode.window.activeTextEditor.insertSnippet(
+            new vscode.SnippetString(`${answer.content}\n`),
+            sel_start
+          );
         } else {
           vscode.window.activeTextEditor.insertSnippet(
-            new vscode.SnippetString(answer.content),
+            new vscode.SnippetString(`\n${answer.content}`),
             sel_end
           );
         }
         progress.report({ increment: 5 });
         resolve()
     }).catch((ex) => {
-      vscode.window.showErrorMessage(`Alita is not able to connec to ${alitaService.serviceProvider.getPromptsUrl}`);
+      vscode.window.showErrorMessage(`Alita is not able to connected to ${alitaService.serviceProvider.getPromptsUrl}`);
       resolve()
     });
   });

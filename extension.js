@@ -1,5 +1,5 @@
 const vscode = require("vscode");
-const { workspaceService } = require("./services");
+const { workspaceService, alitaService } = require("./services");
 const { COMMAND, EXTERNAL_PROMPTS_PROVIDERS } = require("./constants/index");
 const {
   addContext,
@@ -81,6 +81,12 @@ async function activate(context) {
   context.subscriptions.push(initAlitaSub);
   context.subscriptions.push(syncPromptsSub);
   context.subscriptions.push(syncEmbeddingsSub);
+
+  const api = {
+    alitaService,
+    workspaceService
+  }
+  return api
 }
 
 function deactivate() {}

@@ -1,8 +1,8 @@
 {
   "name": "alitacode",
   "displayName": "Alita Code",
-  "description": "Your Vitrual Coding Assistant, to help you write better code faster",
-  "version": "0.2.0",
+  "description": "Your Virtual Coding Assistant, to help you write better code faster",
+  "version": "0.2.10",
   "icon": "images/128x128.png",
   "publisher": "ProjectAlita",
   "engines": {
@@ -152,35 +152,29 @@
           ],
           "description": "Model name used for local prompts"
         },
-        "alitacode.projectId": {
+        "alitacode.customModelName": {
           "order": 6,
+          "type": "string",
+          "default": "",
+          "description": "Custom model name used for local prompts"
+        },
+        "alitacode.customModelTokens": {
+          "order": 7,
+          "type": "number",
+          "default": 4096,
+          "description": "Custom model max tokens used for local prompts"
+        },
+        "alitacode.projectId": {
+          "order": 8,
           "type": "number",
           "default": 1,
           "description": "Project Id in Alita Backened, ignored for OpenAI"
         },
         "alitacode.integrationUid": {
-          "order": 7,
+          "order": 9,
           "type": "string",
           "default": "Integration UUID goes here",
           "description": "AI integration Id from Alita Backened, ignored for OpenAI"
-        },
-        "alitacode.topP": {
-          "order": 8,
-          "label": "Top P default value",
-          "type": "number",
-          "default": 0.8,
-          "minimum": 0,
-          "maximum": 1,
-          "description": "Top P value for the model"
-        },
-        "alitacode.temperature": {
-          "order": 9,
-          "label": "Temperature default value",
-          "type": "number",
-          "default": 0.8,
-          "minimum": 0,
-          "maximum": 1,
-          "description": "Temperature value for the model"
         },
         "alitacode.maxTokens": {
           "order": 10,
@@ -191,8 +185,38 @@
           "maximum": 8096,
           "description": "Max tokens value for the model"
         },
-        "alitacode.topK": {
+        "alitacode.temperature": {
           "order": 11,
+          "label": "Temperature default value",
+          "type": "number",
+          "default": 0.8,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Temperature value for the model"
+        },
+        "alitacode.defaultViewMode": {
+          "order": 12,
+          "type": "string",
+          "default": "append",
+          "enum": [
+            "append",
+            "split",
+            "replace",
+            "prepend"
+          ],
+          "description": "Select the default display mode for the predictions"
+        },
+        "alitacode.topP": {
+          "order": 13,
+          "label": "Top P default value",
+          "type": "number",
+          "default": 0.8,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Top P value for the model"
+        },
+        "alitacode.topK": {
+          "order": 14,
           "label": "Top K default value",
           "type": "number",
           "default": 40,
