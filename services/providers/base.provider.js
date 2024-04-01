@@ -48,6 +48,14 @@ module.exports = class LlmServiceProvider {
         throw new Error("Not implemented");
     }
 
+    async getDatasources() {
+        throw new Error("Not implemented");
+    }
+
+    async chat() {
+        throw new Error("Not implemented");
+    }
+
     async createPrompt() {
         throw new Error("Not implemented");
     }
