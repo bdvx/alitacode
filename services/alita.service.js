@@ -58,7 +58,7 @@ module.exports = class AlitaService {
         return `${fnDesc} not supported by this LLM Provider`
       }
     } catch (ex) {
-      await vscode.window.showErrorMessage(`Alita is not able to connect ${ex.stack}`);
+      await vscode.window.showErrorMessage(`Alita Code gets error: ${ex.stack}`);
       return "You need to configure LLM Provider first"
     }
   }
@@ -73,8 +73,24 @@ module.exports = class AlitaService {
     }
   }
 
+  getSocketConfig () {
+    return this.invokeMethod("getSocketConfig", "Get socket config")
+  }
+
+  getModelSettings () {
+    return this.invokeMethod("getModelSettings", "Get model settings")
+  }
+
   async getPrompts() {
     return await this.invokeMethod("getPrompts", "List prompts")
+  }
+
+  async getPromptDetail(promptId) {
+    return await this.invokeMethod("getPromptDetail", "Get prompt detail", promptId)
+  }
+
+  async getDatasourceDetail(promptId) {
+    return await this.invokeMethod("getDatasourceDetail", "Get prompt detail", promptId)
   }
 
   async getDatasources() {

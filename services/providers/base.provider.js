@@ -40,6 +40,14 @@ module.exports = class LlmServiceProvider {
         console.log("Not Implemented");
     }
 
+    getSocketConfig () {
+        throw new Error("Not implemented");
+    }
+
+    getModelSettings () {
+        throw new Error("Not implemented");
+    }
+
     async predict(template, prompt) {
         throw new Error("Not implemented");
     }

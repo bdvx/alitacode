@@ -70,6 +70,8 @@ This extension contributes the following settings:
 
 # Development
 
+Run build and package and then install the generated `.vsix` 
+
 ## Build
 
 `npm run esbuild`
@@ -78,8 +80,10 @@ This extension contributes the following settings:
 
 `npm run vsce`
 
+Run following and VS Code's "Run" >> "Start Debugging" to debug extension with auto rebuild.
+
 ## Development
 
 `npm run esbuild-watch`
 
-## Prompts
+

@@ -13,14 +13,18 @@
 // limitations under the License.
 
 const CarrierServiceProvider = require("./carrier.provider");
+const { URL }= require("url");
 
 
 module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
     constructor() {
         super();
         this.getPromptsUrl = `${this.config.LLMserverURL}/prompt_lib/prompts/prompt_lib/${this.config.projectID}`;
-        this.getDatasourcesUrl = 
+        this.getPromptDetailUrl = `${this.config.LLMserverURL}/prompt_lib/prompt/prompt_lib/${this.config.projectID}`
+        this.getDatasourcesUrl =
             `${this.config.LLMserverURL}/datasources/datasources/prompt_lib/${this.config.projectID}`;
+        this.getDatasourceDetailUrl =
+            `${this.config.LLMserverURL}/datasources/datasource/prompt_lib/${this.config.projectID}`;
         this.updatePromptsUrl = `${this.config.LLMserverURL}/prompt_lib/version/prompt_lib/${this.config.projectID}`;
         this.predictUrl = `${this.config.LLMserverURL}/prompt_lib/predict/prompt_lib/${this.config.projectID}`;
         this.getEmbeddingsUrl =
@@ -30,7 +34,18 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
             ${this.config.LLMserverURL}/datasources/predict/prompt_lib/${this.config.projectID}`;
     }
 
-    getModelSettings () {
+    getSocketConfig() {
+        const config = this.workspaceService.getWorkspaceConfig();
+        const socketUrl = config.LLMserverURL;
+        const socketPrefix = socketUrl.indexOf("https") === 0 ? "wss://" : "ws://";
+        const urlObject = new URL(socketUrl);
+        return {
+            host: socketPrefix + urlObject.host,
+            path: urlObject.pathname && urlObject.pathname.replace("/api/v1", "/socket.io/"),
+        };
+    }
+
+    getModelSettings() {
         const config = this.workspaceService.getWorkspaceConfig();
         return {
             model: {
@@ -49,6 +64,8 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
         const config = this.workspaceService.getWorkspaceConfig();
         var prompt_data = {}
         var display_type = "append"
+        const url = this.getModelSettings();
+        console.log(url)
         if (template.external) {
             prompt_data = {
                 project_id: config.projectID,
@@ -120,6 +137,24 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
         };
     }
 
+    async getPromptDetail(promptId) {
+        const response = await this.request(this.getPromptDetailUrl + "/" + promptId)
+            .method("GET")
+            .headers({ "Content-Type": "application/json" })
+            .auth(this.authType, this.authToken)
+            .send();
+        return response.data;
+    }
+
+    async getDatasourceDetail(id) {
+        const response = await this.request(this.getDatasourceDetailUrl + "/" + id)
+            .method("GET")
+            .headers({ "Content-Type": "application/json" })
+            .auth(this.authType, this.authToken)
+            .send();
+        return response.data;
+    }
+
     async getDatasources() {
         const response = await this.request(this.getDatasourcesUrl)
             .method("GET")
@@ -129,7 +164,7 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
         return response.data;
     }
 
-    async chat ({
+    async chat({
         prompt_id,
         datasource_id,
         user_input,
