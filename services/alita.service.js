@@ -48,7 +48,22 @@ module.exports = class AlitaService {
     console.log(this.serviceProvider)
   }
 
-  async askAlita({ prompt, template, prompt_template=undefined}) {
+  async invokeMethod(functionName, fnDesc, params) {
+    try {
+      this.checkLLMConfig()
+      if (this.serviceProvider[functionName]) {
+        const result = await this.serviceProvider[functionName](params);
+        return result
+      } else {
+        return `${fnDesc} not supported by this LLM Provider`
+      }
+    } catch (ex) {
+      await vscode.window.showErrorMessage(`Alita Code gets error: ${ex.stack}`);
+      return "You need to configure LLM Provider first"
+    }
+  }
+
+  async askAlita({ prompt, template, prompt_template = undefined }) {
     try {
       this.checkLLMConfig()
       return await this.serviceProvider.predict(template, prompt, prompt_template)
@@ -58,8 +73,36 @@ module.exports = class AlitaService {
     }
   }
 
-  async askOptions({ embedding, prompt, top_k, cutoff, type="append" }) {
-    let result = await this.serviceProvider.similarity(embedding, prompt.trim(), top_k, cutoff )
+  getSocketConfig () {
+    return this.invokeMethod("getSocketConfig", "Get socket config")
+  }
+
+  getModelSettings () {
+    return this.invokeMethod("getModelSettings", "Get model settings")
+  }
+
+  async getPrompts() {
+    return await this.invokeMethod("getPrompts", "List prompts")
+  }
+
+  async getPromptDetail(promptId) {
+    return await this.invokeMethod("getPromptDetail", "Get prompt detail", promptId)
+  }
+
+  async getDatasourceDetail(promptId) {
+    return await this.invokeMethod("getDatasourceDetail", "Get prompt detail", promptId)
+  }
+
+  async getDatasources() {
+    return await this.invokeMethod("getDatasources", "List datasources")
+  }
+
+  async chat(params) {
+    return await this.invokeMethod("chat", "Chat", params)
+  }
+
+  async askOptions({ embedding, prompt, top_k, cutoff, type = "append" }) {
+    let result = await this.serviceProvider.similarity(embedding, prompt.trim(), top_k, cutoff)
     return {
       content: result.trim(),
       type: type
