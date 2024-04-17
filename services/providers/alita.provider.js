@@ -43,8 +43,8 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
         const urlObject = new URL(socketUrl);
         return {
             projectId: config.projectID,
-            host: socketPrefix + urlObject.host,
-            path: urlObject.pathname && urlObject.pathname.concat(socketPath),
+            host: socketPrefix + urlObject.host.replace(/\/$/, ""),
+            path: urlObject.pathname.replace(/\/$/, "").concat(socketPath),
         };
     }
 
