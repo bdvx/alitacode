@@ -14,24 +14,26 @@
 
 const CarrierServiceProvider = require("./carrier.provider");
 const { URL }= require("url");
-
+const apiPath = "/api/v1"
+const socketPath = "/socket.io"
 
 module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
     constructor() {
         super();
-        this.getPromptsUrl = `${this.config.LLMserverURL}/prompt_lib/prompts/prompt_lib/${this.config.projectID}`;
-        this.getPromptDetailUrl = `${this.config.LLMserverURL}/prompt_lib/prompt/prompt_lib/${this.config.projectID}`
+        const apiBasePath = this.config.LLMserverURL.concat(apiPath);
+        this.getPromptsUrl = `${apiBasePath}/prompt_lib/prompts/prompt_lib/${this.config.projectID}`;
+        this.getPromptDetailUrl = `${apiBasePath}/prompt_lib/prompt/prompt_lib/${this.config.projectID}`
         this.getDatasourcesUrl =
-            `${this.config.LLMserverURL}/datasources/datasources/prompt_lib/${this.config.projectID}`;
+            `${apiBasePath}/datasources/datasources/prompt_lib/${this.config.projectID}`;
         this.getDatasourceDetailUrl =
-            `${this.config.LLMserverURL}/datasources/datasource/prompt_lib/${this.config.projectID}`;
-        this.updatePromptsUrl = `${this.config.LLMserverURL}/prompt_lib/version/prompt_lib/${this.config.projectID}`;
-        this.predictUrl = `${this.config.LLMserverURL}/prompt_lib/predict/prompt_lib/${this.config.projectID}`;
+            `${apiBasePath}/datasources/datasource/prompt_lib/${this.config.projectID}`;
+        this.updatePromptsUrl = `${apiBasePath}/prompt_lib/version/prompt_lib/${this.config.projectID}`;
+        this.predictUrl = `${apiBasePath}/prompt_lib/predict/prompt_lib/${this.config.projectID}`;
         this.getEmbeddingsUrl =
-            `${this.config.LLMserverURL}/integrations/integrations/default/${this.config.projectID}`;
-        this.sumilarityUrl = `${this.config.LLMserverURL}/datasources/deduplicate/prompt_lib/${this.config.projectID}`;
+            `${apiBasePath}/integrations/integrations/default/${this.config.projectID}`;
+        this.sumilarityUrl = `${apiBasePath}/datasources/deduplicate/prompt_lib/${this.config.projectID}`;
         this.chatWithDatasourceUrl = `
-            ${this.config.LLMserverURL}/datasources/predict/prompt_lib/${this.config.projectID}`;
+            ${apiBasePath}/datasources/predict/prompt_lib/${this.config.projectID}`;
     }
 
     getSocketConfig() {
@@ -40,8 +42,9 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
         const socketPrefix = socketUrl.indexOf("https") === 0 ? "wss://" : "ws://";
         const urlObject = new URL(socketUrl);
         return {
+            projectId: config.projectID,
             host: socketPrefix + urlObject.host,
-            path: urlObject.pathname && urlObject.pathname.replace("/api/v1", "/socket.io/"),
+            path: urlObject.pathname && urlObject.pathname.concat(socketPath),
         };
     }
 
@@ -64,8 +67,6 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
         const config = this.workspaceService.getWorkspaceConfig();
         var prompt_data = {}
         var display_type = "append"
-        const url = this.getModelSettings();
-        console.log(url)
         if (template.external) {
             prompt_data = {
                 project_id: config.projectID,

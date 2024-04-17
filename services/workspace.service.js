@@ -25,6 +25,7 @@ module.exports = class WorkspaceService {
   }
 
   getWorkspaceConfig() {
+    const folders = vscode.workspace.workspaceFolders;
     return {
       enable: workspace
         .getConfiguration(WORKSPACE.EXTENSION.NAME)
@@ -81,7 +82,7 @@ module.exports = class WorkspaceService {
       integrationID: workspace
         .getConfiguration(WORKSPACE.EXTENSION.NAME)
         .get(WORKSPACE.EXTENSION.PARAM.INTEGRATIONID),
-      workspacePath: vscode.workspace.workspaceFolders[0].uri.fsPath,
+      workspacePath: folders && folders.length > 0 ? folders[0].uri.fsPath : null,
     };
   }
 
