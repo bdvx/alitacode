@@ -58,7 +58,7 @@ module.exports = class AlitaService {
         return `${fnDesc} not supported by this LLM Provider`
       }
     } catch (ex) {
-      await vscode.window.showErrorMessage(`Alita Code gets error: ${ex.stack}`);
+      await vscode.window.showErrorMessage(`Alita Code ${functionName} error: ${ex.stack}`);
       return "You need to configure LLM Provider first"
     }
   }
