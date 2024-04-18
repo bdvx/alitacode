@@ -23,7 +23,7 @@ module.exports = async function () {
     await workspaceService.updatePrompts()
   } catch (e) {
     await vscode.window.showErrorMessage(
-      `Alita is not able to connec to ${alitaService.serviceProvider.getPromptsUrl}`);
+      `Alita is not able to sync prompt with ${alitaService.serviceProvider.getPromptsUrl}. Error: ${e}`);
     }
   
 }

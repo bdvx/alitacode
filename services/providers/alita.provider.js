@@ -13,14 +13,20 @@
 // limitations under the License.
 
 const CarrierServiceProvider = require("./carrier.provider");
-const { URL }= require("url");
+const path = require("path");
+const { URL } = require("url");
+
 const apiPath = "/api/v1"
 const socketPath = "/socket.io"
+
+const removeTrailingSlash = (url) => {
+    return url.replace(/\/$/, "");
+};
 
 module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
     constructor() {
         super();
-        const apiBasePath = this.config.LLMserverURL.concat(apiPath);
+        const apiBasePath = removeTrailingSlash(this.config.LLMserverURL).concat(apiPath);
         this.getPromptsUrl = `${apiBasePath}/prompt_lib/prompts/prompt_lib/${this.config.projectID}`;
         this.getPromptDetailUrl = `${apiBasePath}/prompt_lib/prompt/prompt_lib/${this.config.projectID}`
         this.getDatasourcesUrl =
@@ -43,8 +49,8 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
         const urlObject = new URL(socketUrl);
         return {
             projectId: config.projectID,
-            host: socketPrefix + urlObject.host.replace(/\/$/, ""),
-            path: urlObject.pathname.replace(/\/$/, "").concat(socketPath),
+            host: socketPrefix + removeTrailingSlash(urlObject.host),
+            path: removeTrailingSlash(urlObject.pathname).concat(socketPath),
         };
     }
 
@@ -138,6 +144,33 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
         };
     }
 
+    async syncPrompts() {
+        const prompts = await this.getPrompts();
+        const _addedPrompts = []
+        for (var i = 0; i < prompts.length; i++) {
+            var prompt = prompts[i]
+            var tags = prompt.tags.map((tag) => tag.name.toLowerCase())
+            if (tags.includes("code")) {
+                _addedPrompts.push(prompt.name)
+                await this.addPrompt(
+                    prompt.name,
+                    prompt.description ? prompt.description : "",
+                    { "prompt_id": prompt.id, "integration_uid": prompt.integration_uid }, [], {}, true
+                )
+            }
+        }
+        const workspaceConfig = this.workspaceService.getWorkspaceConfig();
+        var promptsMapping = await this.workspaceService.readContent(
+            path.join(workspaceConfig.workspacePath, workspaceConfig.promptLib, "./prompts.json"),
+            true
+        );
+        for (const [key, value] of Object.entries(promptsMapping)) {
+            if (!_addedPrompts.includes(key) && value.external) {
+                await this.removePrompt(key)
+            }
+        }
+    }
+
     async getPromptDetail(promptId) {
         const response = await this.request(this.getPromptDetailUrl + "/" + promptId)
             .method("GET")
@@ -145,6 +178,15 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
             .auth(this.authType, this.authToken)
             .send();
         return response.data;
+    }
+
+    async getPrompts() {
+        const response = await this.request(this.getPromptsUrl)
+            .method("GET")
+            .headers({ "Content-Type": "application/json" })
+            .auth(this.authType, this.authToken)
+            .send();
+        return response.data.rows || [];
     }
 
     async getDatasourceDetail(id) {
@@ -162,7 +204,7 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
             .headers({ "Content-Type": "application/json" })
             .auth(this.authType, this.authToken)
             .send();
-        return response.data;
+        return response.data.rows || [];
     }
 
     async chat({
