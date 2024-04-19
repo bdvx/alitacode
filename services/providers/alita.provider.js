@@ -76,11 +76,11 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
         if (template.external) {
             prompt_data = {
                 project_id: config.projectID,
-                prompt_id: prompt_template.prompt_id,
+                prompt_id: template.prompt_id,
                 model_settings: this.getModelSettings(),
                 user_input: prompt,
-                variables: prompt_template.variables,
-                chat_history: prompt_template.chat_history
+                variables: template.variables,
+                chat_history: template.chat_history
             };
             if (template.userSettings) {
                 display_type = template.userSettings.display_type ? template.userSettings.display_type : "append"
