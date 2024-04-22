@@ -18,6 +18,7 @@ const { URL } = require("url");
 
 const apiPath = "/api/v1"
 const socketPath = "/socket.io"
+const pageSize = 10
 
 const removeTrailingSlash = (url) => {
     return url.replace(/\/$/, "");
@@ -27,6 +28,8 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
     constructor() {
         super();
         const apiBasePath = removeTrailingSlash(this.config.LLMserverURL).concat(apiPath);
+        this.codeTagId = -1;
+        this.getCodeTagUrl = `${apiBasePath}/prompt_lib/tags/prompt_lib/${this.config.projectID}`
         this.getPromptsUrl = `${apiBasePath}/prompt_lib/prompts/prompt_lib/${this.config.projectID}`;
         this.getPromptDetailUrl = `${apiBasePath}/prompt_lib/prompt/prompt_lib/${this.config.projectID}`
         this.getDatasourcesUrl =
@@ -145,7 +148,14 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
     }
 
     async syncPrompts() {
-        const prompts = await this.getPrompts();
+        const prompts = [];
+        let promptData = [];
+        let page = 0;
+        do {
+            promptData = await this.getPrompts({ page: page++ });
+            prompts.push(...promptData);
+        } while (promptData.length > 0 && page < 10);
+
         const _addedPrompts = []
         for (var i = 0; i < prompts.length; i++) {
             var prompt = prompts[i]
@@ -180,8 +190,32 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
         return response.data;
     }
 
-    async getPrompts() {
-        const response = await this.request(this.getPromptsUrl)
+    async getCodeTagId() {
+        if (this.codeTagId > 0) return
+
+        const tagsResponse = await this.request(this.getCodeTagUrl, {
+            params: { 
+                query: "code", 
+                offset: 0, 
+                limit: 10
+            }})
+            .method("GET")
+            .headers({ "Content-Type": "application/json" })
+            .auth(this.authType, this.authToken)
+            .send();
+        this.codeTagId = tagsResponse.data.rows.find((tag) => tag.name === "code").id
+    }
+
+    async getPrompts({ page = 0, query }) {
+        await this.getCodeTagId();
+        const tagParam = this.codeTagId ? { tags: this.codeTagId } : {}
+        const response = await this.request(this.getPromptsUrl, {
+            params: {
+                offset: page * pageSize, 
+                limit: pageSize, 
+                query,
+                ...tagParam
+            }})
             .method("GET")
             .headers({ "Content-Type": "application/json" })
             .auth(this.authType, this.authToken)

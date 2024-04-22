@@ -1,21 +1,21 @@
 # Alita Code
 
 
-Introducing AlitaCode for VSCode, the ultimate AI-powered IDE extension that revolutionizes the way you develop, test, and maintain your code. AlitaCode harnesses the power of generative AI to provide intelligent suggestions, streamline code implementation, and automate essential tasks, elevating your coding experience to new heights. With customizable internal and external prompts, AlitaCode offers an unparalleled level of adaptability, catering to your unique project needs and preferences.
+Introducing Alita Code for VSCode, the ultimate AI-powered IDE extension that revolutionizes the way you develop, test, and maintain your code. Alita Code harnesses the power of generative AI to provide intelligent suggestions, streamline code implementation, and automate essential tasks, elevating your coding experience to new heights. With customizable internal and external prompts, Alita Code offers an unparalleled level of adaptability, catering to your unique project needs and preferences.
 
-# Why AlitaCode?
+# Why Alita Code?
 
 ## Boost productivity with AI-powered suggestions
 
-AlitaCode intelligently analyzes your code and provides real-time suggestions for implementing features, enhancing code readability, and optimizing performance. Save time and effort while crafting high-quality code.
+Alita Code intelligently analyzes your code and provides real-time suggestions for implementing features, enhancing code readability, and optimizing performance. Save time and effort while crafting high-quality code.
 
 ## Automate testing and documentation
 
-Generate unit-tests, integration tests, and automated tests with ease, ensuring your code is robust and reliable. AlitaCode also automatically adds comments to your code, making it more understandable and maintainable for your team.
+Generate unit-tests, integration tests, and automated tests with ease, ensuring your code is robust and reliable. Alita Code also automatically adds comments to your code, making it more understandable and maintainable for your team.
 
 ## Customizable prompts for personalized assistance
 
-Tailor AlitaCode to your specific needs with customizable internal and external prompts. Create and modify prompts within your IDE, or leverage the power of Alita Backend's large language model for external prompts, offering an unparalleled level of adaptability.
+Tailor Alita Code to your specific needs with customizable internal and external prompts. Create and modify prompts within your IDE, or leverage the power of Alita Backend's large language model for external prompts, offering an unparalleled level of adaptability.
 
 
 # Features list:
@@ -35,7 +35,7 @@ Tailor AlitaCode to your specific needs with customizable internal and external 
 - Secure and privacy-conscious implementation
 
 # Extension Commands
-- Alita: Init - Initialize AlitaCode and create .promptLib folder in a root of your open workspace
+- Alita: Init - Initialize Alita Code and create .promptLib folder in a root of your open workspace
 - Alita: Create Prompt - Create a new prompt in .promptLib folder
 - Alita: Extend Context - Extend context of the prompt in .promptLib folder
 - Alita: Predict - Provide a list of prompts to choose from and generate prediction based on the selected prompt

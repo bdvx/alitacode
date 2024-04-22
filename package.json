@@ -100,7 +100,7 @@
       }
     ],
     "configuration": {
-      "title": "AlitaCode",
+      "title": "Alita Code",
       "properties": {
         "alitacode.enable": {
           "type": "boolean",
