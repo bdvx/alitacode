@@ -81,7 +81,7 @@ module.exports = class AlitaService {
     return this.invokeMethod("getModelSettings", "Get model settings")
   }
 
-  async getPrompts() {
+  async getPrompts({ page = 0, query }) {
     return await this.invokeMethod("getPrompts", "List prompts")
   }
 
