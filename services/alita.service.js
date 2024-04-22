@@ -82,7 +82,7 @@ module.exports = class AlitaService {
   }
 
   async getPrompts({ page = 0, query }) {
-    return await this.invokeMethod("getPrompts", "List prompts")
+    return await this.invokeMethod("getPrompts", "List prompts", {page, query})
   }
 
   async getPromptDetail(promptId) {
