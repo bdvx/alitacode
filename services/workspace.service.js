@@ -82,6 +82,9 @@ module.exports = class WorkspaceService {
       integrationID: workspace
         .getConfiguration(WORKSPACE.EXTENSION.NAME)
         .get(WORKSPACE.EXTENSION.PARAM.INTEGRATIONID),
+      verifySsl: workspace
+        .getConfiguration(WORKSPACE.EXTENSION.NAME)
+        .get(WORKSPACE.EXTENSION.PARAM.VERIFY_SSL),
       workspacePath: folders && folders.length > 0 ? folders[0].uri.fsPath : null,
     };
   }

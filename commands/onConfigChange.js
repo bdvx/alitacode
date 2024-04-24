@@ -16,10 +16,12 @@ const fs = require("fs");
 const path = require("path");
 const vscode = require("vscode");
 const { LOCAL_PROMPTS_BLOCKERS } = require("../constants/index");
+const https = require("https");
 
 module.exports = async function () {
     const { workspaceService, alitaService } = require("../services");
-    const { promptLib, workspacePath, LLMProvider} = workspaceService.getWorkspaceConfig();
+    const { promptLib, workspacePath, LLMProvider, verifySsl} = workspaceService.getWorkspaceConfig();
+    https.globalAgent.options.rejectUnauthorized = verifySsl;
     await vscode.commands.executeCommand("setContext", "alitacode.LLMProvider", LLMProvider);
     await vscode.commands.executeCommand("setContext", 
         "alitacode.LocalPrompts", !LOCAL_PROMPTS_BLOCKERS.includes(LLMProvider));

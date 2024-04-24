@@ -62,6 +62,7 @@ module.exports = {
         CUSTOM_MODEL_NAME: "customModelName",
         DEFAULT_TOKENS: "customModelTokens",
         DEFAULT_VIEW_MODE: "defaultViewMode",
+        VERIFY_SSL: "verifySsl"
       },
     },
   },

@@ -2,7 +2,7 @@
   "name": "alitacode",
   "displayName": "Alita Code",
   "description": "Your Virtual Coding Assistant, to help you write better code faster",
-  "version": "0.2.16",
+  "version": "0.2.17",
   "icon": "images/128x128.png",
   "publisher": "ProjectAlita",
   "engines": {
@@ -225,6 +225,13 @@
           "minimum": 1,
           "maximum": 40,
           "description": "Top K value for the model"
+        },
+        "alitacode.verifySsl": {
+          "order": 15,
+          "label": "Verify SSL",
+          "type": "boolean",
+          "default": false,
+          "description": "Verify LLM service provider certificate"
         }
       }
     }
@@ -241,11 +248,11 @@
     "publish": "vsce publish"
   },
   "dependencies": {
-    "@azure/openai": "^1.0.0-beta.3",
-    "axios": "^1.4.0",
+    "@azure/openai": "^1.0.0-beta.12",
+    "axios": "^1.6.8",
     "form-data": "^4.0.0",
     "squirrelly": "7.9.2",
-    "yaml": "^2.3.2"
+    "yaml": "^2.4.1"
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
