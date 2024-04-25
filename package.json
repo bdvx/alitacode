@@ -230,7 +230,7 @@
           "order": 15,
           "label": "Verify SSL",
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Verify LLM service provider certificate"
         }
       }
