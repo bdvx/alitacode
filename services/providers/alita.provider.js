@@ -36,6 +36,10 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
             `${apiBasePath}/datasources/datasources/prompt_lib/${this.config.projectID}`;
         this.getDatasourceDetailUrl =
             `${apiBasePath}/datasources/datasource/prompt_lib/${this.config.projectID}`;
+        this.getApplicationsUrl =
+            `${apiBasePath}/applications/applications/prompt_lib/${this.config.projectID}`;
+        this.getApplicationDetailUrl =
+            `${apiBasePath}/applications/application/prompt_lib/${this.config.projectID}`;
         this.updatePromptsUrl = `${apiBasePath}/prompt_lib/version/prompt_lib/${this.config.projectID}`;
         this.predictUrl = `${apiBasePath}/prompt_lib/predict/prompt_lib/${this.config.projectID}`;
         this.getEmbeddingsUrl =
@@ -234,6 +238,24 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
 
     async getDatasources() {
         const response = await this.request(this.getDatasourcesUrl)
+            .method("GET")
+            .headers({ "Content-Type": "application/json" })
+            .auth(this.authType, this.authToken)
+            .send();
+        return response.data.rows || [];
+    }
+
+    async getAppllicationDetail(id) {
+        const response = await this.request(this.getApplicationDetailUrl + "/" + id)
+            .method("GET")
+            .headers({ "Content-Type": "application/json" })
+            .auth(this.authType, this.authToken)
+            .send();
+        return response.data;
+    }
+
+    async getApplications() {
+        const response = await this.request(this.getApplicationsUrl)
             .method("GET")
             .headers({ "Content-Type": "application/json" })
             .auth(this.authType, this.authToken)
