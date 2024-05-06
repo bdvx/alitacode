@@ -89,12 +89,20 @@ module.exports = class AlitaService {
     return await this.invokeMethod("getPromptDetail", "Get prompt detail", promptId)
   }
 
-  async getDatasourceDetail(promptId) {
-    return await this.invokeMethod("getDatasourceDetail", "Get prompt detail", promptId)
+  async getDatasourceDetail(id) {
+    return await this.invokeMethod("getDatasourceDetail", "Get prompt detail", id)
   }
 
   async getDatasources() {
     return await this.invokeMethod("getDatasources", "List datasources")
+  }
+
+  async getApplicationDetail(id) {
+    return await this.invokeMethod("getAppllicationDetail", "Get application detail", id)
+  }
+
+  async getApplications() {
+    return await this.invokeMethod("getApplications", "List applications")
   }
 
   async chat(params) {
