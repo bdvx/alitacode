@@ -2,7 +2,7 @@
   "name": "alitacode",
   "displayName": "Alita Code",
   "description": "Your Virtual Coding Assistant, to help you write better code faster",
-  "version": "0.2.17",
+  "version": "0.3.0",
   "icon": "images/128x128.png",
   "publisher": "ProjectAlita",
   "engines": {
@@ -74,11 +74,11 @@
           "command": "alitacode.addContext"
         },
         {
-          "when": "editorHasSelection && editorFocus && !editorReadonly && alita.init && alitacode.LLMProvider == 'Alita'",
+          "when": "editorHasSelection && editorFocus && !editorReadonly && alita.init && alitacode.LLMProvider == 'Carrier'",
           "command": "alitacode.suggest"
         },
         {
-          "when": "alita.init && alitacode.LLMProvider == 'Alita'",
+          "when": "alita.init && alitacode.LLMProvider == 'Carrier'",
           "command": "alitacode.syncEmbeddings"
         },
         {
