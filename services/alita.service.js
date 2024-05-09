@@ -105,6 +105,14 @@ module.exports = class AlitaService {
     return await this.invokeMethod("getApplications", "List applications")
   }
 
+  async stopApplicationTask(taskId) {
+    return await this.invokeMethod("stopApplicationTask", "Stop application task", taskId)
+  }
+
+  async stopDatasourceTask(taskId) {
+    return await this.invokeMethod("stopDatasourceTask", "Stop datasource task", taskId)
+  }
+
   async chat(params) {
     return await this.invokeMethod("chat", "Chat", params)
   }
