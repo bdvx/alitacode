@@ -45,8 +45,12 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
         this.getEmbeddingsUrl =
             `${apiBasePath}/integrations/integrations/default/${this.config.projectID}`;
         this.sumilarityUrl = `${apiBasePath}/datasources/deduplicate/prompt_lib/${this.config.projectID}`;
-        this.chatWithDatasourceUrl = `
-            ${apiBasePath}/datasources/predict/prompt_lib/${this.config.projectID}`;
+        this.chatWithDatasourceUrl =
+            `${apiBasePath}/datasources/predict/prompt_lib/${this.config.projectID}`;
+        this.stopApplicationTaskUrl =
+            `${apiBasePath}/applications/task/prompt_lib/${this.config.projectID}`;
+        this.stopDatasourceTaskUrl =
+            `${apiBasePath}/datasources/task/prompt_lib/${this.config.projectID}`;
     }
 
     getSocketConfig() {
@@ -207,24 +211,32 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
             .headers({ "Content-Type": "application/json" })
             .auth(this.authType, this.authToken)
             .send();
-        this.codeTagId = tagsResponse.data.rows.find((tag) => tag.name === "code").id
+        this.codeTagId = (tagsResponse.data.rows.find((tag) => tag.name === "code") || {}).id
+    }
+
+    async checkIfHasCodeTag() {
+        await this.getCodeTagId();
+        return this.codeTagId && this.codeTagId !== -1;
     }
 
     async getPrompts({ page = 0, query }) {
-        await this.getCodeTagId();
-        const tagParam = this.codeTagId ? { tags: this.codeTagId } : {}
-        const response = await this.request(this.getPromptsUrl, {
-            params: {
-                offset: page * pageSize, 
-                limit: pageSize, 
-                query,
-                ...tagParam
-            }})
-            .method("GET")
-            .headers({ "Content-Type": "application/json" })
-            .auth(this.authType, this.authToken)
-            .send();
-        return response.data.rows || [];
+        const hasCodeTag = await this.checkIfHasCodeTag();
+        if (hasCodeTag) {
+            const response = await this.request(this.getPromptsUrl, {
+                params: {
+                    offset: page * pageSize,
+                    limit: pageSize,
+                    query,
+                    tags: this.codeTagId
+                }
+            })
+                .method("GET")
+                .headers({ "Content-Type": "application/json" })
+                .auth(this.authType, this.authToken)
+                .send();
+            return response.data.rows || [];
+        }
+        return []
     }
 
     async getDatasourceDetail(id) {
@@ -237,12 +249,20 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
     }
 
     async getDatasources() {
-        const response = await this.request(this.getDatasourcesUrl)
-            .method("GET")
-            .headers({ "Content-Type": "application/json" })
-            .auth(this.authType, this.authToken)
-            .send();
-        return response.data.rows || [];
+        const hasCodeTag = await this.checkIfHasCodeTag();
+        if (hasCodeTag) {
+            const response = await this.request(this.getDatasourcesUrl, {
+                params: {
+                    tags: this.codeTagId
+                }
+            })
+                .method("GET")
+                .headers({ "Content-Type": "application/json" })
+                .auth(this.authType, this.authToken)
+                .send();
+            return response.data.rows || [];
+        }
+        return []
     }
 
     async getAppllicationDetail(id) {
@@ -255,12 +275,20 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
     }
 
     async getApplications() {
-        const response = await this.request(this.getApplicationsUrl)
-            .method("GET")
-            .headers({ "Content-Type": "application/json" })
-            .auth(this.authType, this.authToken)
-            .send();
-        return response.data.rows || [];
+        const hasCodeTag = await this.checkIfHasCodeTag();
+        if (hasCodeTag) {
+            const response = await this.request(this.getApplicationsUrl, {
+                params: {
+                    tags: this.codeTagId
+                }
+            })
+                .method("GET")
+                .headers({ "Content-Type": "application/json" })
+                .auth(this.authType, this.authToken)
+                .send();
+            return response.data.rows || [];
+        }
+        return []
     }
 
     async chat({
@@ -303,5 +331,23 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
             ...response.data,
             content: response.data.response,
         } : (response.data.messages && response.data.messages[0]);
+    }
+
+    async stopApplicationTask(taskId) {
+        const response = await this.request(this.stopApplicationTaskUrl + "/" + taskId)
+            .method("DELETE")
+            .headers({ "Content-Type": "application/json" })
+            .auth(this.authType, this.authToken)
+            .send();
+        return response.status;
+    }
+
+    async stopDatasourceTask(taskId) {
+        const response = await this.request(this.stopDatasourceTaskUrl + "/" + taskId)
+            .method("DELETE")
+            .headers({ "Content-Type": "application/json" })
+            .auth(this.authType, this.authToken)
+            .send();
+        return response.status;
     }
 }
