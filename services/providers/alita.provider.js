@@ -62,6 +62,7 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
             projectId: config.projectID,
             host: socketPrefix + removeTrailingSlash(urlObject.host),
             path: removeTrailingSlash(urlObject.pathname).concat(socketPath),
+            token: this.authToken
         };
     }
 
