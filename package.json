@@ -2,7 +2,7 @@
   "name": "alitacode",
   "displayName": "Alita Code",
   "description": "Your Virtual Coding Assistant, to help you write better code faster",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "icon": "images/128x128.png",
   "publisher": "ProjectAlita",
   "engines": {
@@ -24,10 +24,6 @@
         "title": "Alita: Predict"
       },
       {
-        "command": "alitacode.suggest",
-        "title": "Alita: Similarity"
-      },
-      {
         "command": "alitacode.createPrompt",
         "title": "Alita: Create Prompt"
       },
@@ -38,10 +34,6 @@
       {
         "command": "alitacode.syncPrompts",
         "title": "Alita: Sync External Prompts"
-      },
-      {
-        "command": "alitacode.syncEmbeddings",
-        "title": "Alita: Sync Embeddings"
       },
       {
         "command": "alitacode.initAlita",
@@ -72,14 +64,6 @@
         {
           "when": "editorHasSelection && editorFocus && !editorReadonly && alita.init && alitacode.LocalPrompts",
           "command": "alitacode.addContext"
-        },
-        {
-          "when": "editorHasSelection && editorFocus && !editorReadonly && alita.init && alitacode.LLMProvider == 'Carrier'",
-          "command": "alitacode.suggest"
-        },
-        {
-          "when": "alita.init && alitacode.LLMProvider == 'Carrier'",
-          "command": "alitacode.syncEmbeddings"
         },
         {
           "when": "alita.init && alitacode.LLMProvider in alitacode.ExtentablePlatforms",
@@ -119,40 +103,17 @@
           "default": "",
           "description": "This is API Key or Bearer token for LLM service provider if applicable"
         },
-        "alitacode.serviceProviderForLLM": {
-          "order": 1,
-          "type": "string",
-          "default": "None",
-          "enum": [
-            "None",
-            "Alita",
-            "Carrier",
-            "Azure OpenAI",
-            "OpenAI",
-            "DigitalPlatform"
-          ],
-          "description": "Select the LLM provider to be used with Alita"
-        },
-        "alitacode.apiVersion": {
-          "order": 4,
-          "type": "string",
-          "default": "2023-03-15-preview",
-          "description": "Api version, mostly applicable for Azure OpenAI compatible APIs"
-        },
         "alitacode.modelName": {
           "order": 5,
           "type": "string",
-          "default": "gpt-35-turbo",
+          "default": "gpt-4",
           "enum": [
-            "gpt-3.5-turbo",
+            "gpt-35-turbo",
+            "gpt-35-turbo-16k",
             "gpt-4",
-            "text-bison@001",
-            "code-bison@001",
-            "amazon.titan-tg1-large",
-            "anthropic.claude-v2",
-            "ai21.j2-jumbo-instruct"
+            "gpt-4-0125-preview"
           ],
-          "description": "Model name used for local prompts"
+          "description": "Model name used for local prompts, this is deployment name, and it can be different from case to case"
         },
         "alitacode.customModelName": {
           "order": 6,

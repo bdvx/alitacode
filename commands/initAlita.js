@@ -43,9 +43,6 @@ module.exports = async function () {
     }
     fs.writeFileSync(path.join(workspacePath, promptLib, "./prompts.json"), JSON.stringify(prompts, null, 2));
   }
-  if (!fs.existsSync(path.join(workspacePath, promptLib, "./embeddings.json"))){
-    fs.writeFileSync(path.join(workspacePath, promptLib, "./embeddings.json"), "{}");
-  }
   await vscode.commands.executeCommand("setContext", "alita.init", true);
   return await onConfigChange();
 };

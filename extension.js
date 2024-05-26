@@ -21,10 +21,8 @@ const {
   createPrompt,
   predict,
   addGoodPrediction,
-  suggest,
   initAlita,
   syncPrompts,
-  syncEmbeddings,
   onConfigChange
 } = require("./commands");
 
@@ -46,10 +44,6 @@ async function activate(context) {
     predict.bind(null)
   );
 
-  const suggestSub = vscode.commands.registerCommand(
-    COMMAND.SUGGEST,
-    suggest
-  );
 
   const initAlitaSub = vscode.commands.registerCommand(
     COMMAND.INIT_ALITA,
@@ -59,11 +53,6 @@ async function activate(context) {
   const syncPromptsSub = vscode.commands.registerCommand(
     COMMAND.SYNC_PROMPTS,
     syncPrompts
-  );
-
-  const syncEmbeddingsSub = vscode.commands.registerCommand(
-    COMMAND.SYNC_EMBEDDINGS,
-    syncEmbeddings
   );
 
   const createPromptSub = vscode.commands.registerCommand(
@@ -87,14 +76,12 @@ async function activate(context) {
   );
 
   context.subscriptions.push(predictSub);
-  context.subscriptions.push(suggestSub);
   context.subscriptions.push(createPromptSub);
   context.subscriptions.push(addContextSub);
   context.subscriptions.push(addExampleSub);
   context.subscriptions.push(addGoodPredictionSub);
   context.subscriptions.push(initAlitaSub);
   context.subscriptions.push(syncPromptsSub);
-  context.subscriptions.push(syncEmbeddingsSub);
 
   const api = {
     alitaService,

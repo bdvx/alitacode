@@ -85,10 +85,9 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
         const config = this.workspaceService.getWorkspaceConfig();
         var prompt_data = {}
         var display_type = "append"
+        var response = {}
         if (template.external) {
             prompt_data = {
-                project_id: config.projectID,
-                prompt_id: template.prompt_id,
                 model_settings: this.getModelSettings(),
                 user_input: prompt,
                 variables: template.variables,
@@ -114,6 +113,12 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
                     prompt_data.model_name = template.userSettings.modelName
                 }
             }
+            response = await this.request(this.predictUrl + "/" + template.prompt_id)
+                .method("POST")
+                .headers({ "Content-Type": "application/json", })
+                .body(prompt_data)
+                .auth(this.authType, this.authToken)
+                .send();
         } else {
             if (!prompt_template) {
                 prompt_template = await this.getPromptTemplate(config, template.template);
@@ -138,16 +143,16 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
                     .map(([key, value]) => ({ name: key, value: value })),
                 chat_history: prompt_template.chat_history
             };
+            response = await this.request(this.predictUrl)
+                .method("POST")
+                .headers({ "Content-Type": "application/json", })
+                .body(prompt_data)
+                .auth(this.authType, this.authToken)
+                .send();
         }
         display_type = (prompt_template && prompt_template.display_type) ?
             prompt_template.display_type :
             this.workspaceService.getWorkspaceConfig().DefaultViewMode;
-        const response = await this.request(this.predictUrl)
-            .method("POST")
-            .headers({ "Content-Type": "application/json", })
-            .body(prompt_data)
-            .auth(this.authType, this.authToken)
-            .send();
         // escape $ sign as later it try to read it as template variable
         const resp_data = response.data.messages.map((message) => message.content.replace(/\$/g, "\\$")).join("\n")
         return {

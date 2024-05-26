@@ -69,12 +69,10 @@ module.exports = {
   COMMAND: {
     INIT_ALITA: "alitacode.initAlita",
     SYNC_PROMPTS: "alitacode.syncPrompts",
-    SYNC_EMBEDDINGS: "alitacode.syncEmbeddings",
     ADD_EXAMPLE: "alitacode.addExample",
     ADD_CONTEXT: "alitacode.addContext",
     CREATE_PROMPT: "alitacode.createPrompt",
     PREDICT: "alitacode.predict",
-    SUGGEST: "alitacode.suggest",
     OPEN_SETTINGS: "workbench.action.openSettings",
     ADD_GOOD_PREDICTION: "alitacode.addGoodPrediction",
   },

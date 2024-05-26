@@ -39,7 +39,7 @@ module.exports = class WorkspaceService {
         .get(WORKSPACE.EXTENSION.PARAM.LLM_TOKEN),
       LLMProvider: workspace
         .getConfiguration(WORKSPACE.EXTENSION.NAME)
-        .get(WORKSPACE.EXTENSION.PARAM.LLM_PROVIDER_TYPE),
+        .get(WORKSPACE.EXTENSION.PARAM.LLM_PROVIDER_TYPE, "Alita"),
       DefaultViewMode: workspace
         .getConfiguration(WORKSPACE.EXTENSION.NAME)
         .get(WORKSPACE.EXTENSION.PARAM.DEFAULT_VIEW_MODE),
@@ -57,13 +57,7 @@ module.exports = class WorkspaceService {
         .get(WORKSPACE.EXTENSION.PARAM.DEFAULT_TOKENS),
       LLMApiVersion: workspace
         .getConfiguration(WORKSPACE.EXTENSION.NAME)
-        .get(WORKSPACE.EXTENSION.PARAM.LLM_API_VERSION),
-      EmbServerURL: workspace
-        .getConfiguration(WORKSPACE.EXTENSION.NAME)
-        .get(WORKSPACE.EXTENSION.PARAM.EMB_SERVER_URL),
-      EmbAuthToken: workspace
-        .getConfiguration(WORKSPACE.EXTENSION.NAME)
-        .get(WORKSPACE.EXTENSION.PARAM.EMB_TOKEN),
+        .get(WORKSPACE.EXTENSION.PARAM.LLM_API_VERSION, "2023-12-01-preview"),
       topP: workspace
         .getConfiguration(WORKSPACE.EXTENSION.NAME)
         .get(WORKSPACE.EXTENSION.PARAM.TOP_P),

@@ -116,12 +116,4 @@ module.exports = class AlitaService {
   async chat(params) {
     return await this.invokeMethod("chat", "Chat", params)
   }
-
-  async askOptions({ embedding, prompt, top_k, cutoff, type = "append" }) {
-    let result = await this.serviceProvider.similarity(embedding, prompt.trim(), top_k, cutoff)
-    return {
-      content: result.trim(),
-      type: type
-    }
-  }
 };
