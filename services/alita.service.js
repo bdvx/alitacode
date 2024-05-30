@@ -105,6 +105,10 @@ module.exports = class AlitaService {
     return await this.invokeMethod("getApplications", "List applications")
   }
 
+  async getDeployments() {
+    return await this.invokeMethod("getDeployments", "Get deployments")
+  }
+
   async stopApplicationTask(taskId) {
     return await this.invokeMethod("stopApplicationTask", "Stop application task", taskId)
   }
