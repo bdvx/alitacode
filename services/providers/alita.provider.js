@@ -51,6 +51,8 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
             `${apiBasePath}/applications/task/prompt_lib/${this.config.projectID}`;
         this.stopDatasourceTaskUrl =
             `${apiBasePath}/datasources/task/prompt_lib/${this.config.projectID}`;
+        this.getDeploymentsUrl =
+            `${apiBasePath}/integrations/integrations/default/${this.config.projectID}?section=ai`;
     }
 
     getSocketConfig() {
@@ -355,5 +357,14 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
             .auth(this.authType, this.authToken)
             .send();
         return response.status;
+    }
+
+    async getDeployments() {
+        const response = await this.request(this.getDeploymentsUrl)
+            .method("GET")
+            .headers({ "Content-Type": "application/json" })
+            .auth(this.authType, this.authToken)
+            .send();
+        return response.data;
     }
 }
