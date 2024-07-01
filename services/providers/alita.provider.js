@@ -115,7 +115,13 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
                     prompt_data.model_name = template.userSettings.modelName
                 }
             }
-            response = await this.request(this.predictUrl + "/" + template.prompt_id)
+            // find the last version of the prompt
+            var prompt_details_response = (await this.getPromptDetail(template.prompt_id));
+            var latest_prompt_version = prompt_details_response.versions.reduce((max, current) => {
+                return current.id > max.id ? current : max;
+            }, prompt_details_response.versions[0]);
+            // predict by version id
+            response = await this.request(this.predictUrl + "/" + latest_prompt_version.id)
                 .method("POST")
                 .headers({ "Content-Type": "application/json", })
                 .body(prompt_data)
@@ -213,7 +219,7 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
             params: { 
                 query: "code", 
                 offset: 0, 
-                limit: 10
+                limit: 0
             }})
             .method("GET")
             .headers({ "Content-Type": "application/json" })
