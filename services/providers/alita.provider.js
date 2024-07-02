@@ -136,7 +136,6 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
                 .body(prompt_data)
                 .auth(this.authType, this.authToken)
                 .send();
-            console.log(prompt_data);
         } else {
             if (!prompt_template) {
                 prompt_template = await this.getPromptTemplate(config, template.template);
