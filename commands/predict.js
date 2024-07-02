@@ -40,7 +40,6 @@ module.exports = async function () {
       : (prompt.external ? "terminal" : "remote-explorer")),
     full_name: prompt.label
   }));
-  console.log([...promptsList][1]);
   let selection = await windowService.showQuickPick([...entities]);
   selection = [...promptsList].find(prompt => prompt.label === selection.full_name)
   if (!selection) return;
