@@ -248,7 +248,8 @@ module.exports = class LlmServiceProvider {
             promptsMapping[promptName] = {
                 description: promptDescription,
                 external: true,
-                userSettings: userSettings
+                userSettings: userSettings,
+                prompt_type: promptName.endsWith("_prompt") ? "PROMPT" : "DATASOURCE"
             };
             for (const [key, value] of Object.entries(context)) {
                 promptsMapping[promptName][key] = value

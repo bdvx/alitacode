@@ -38,10 +38,9 @@ Tailor Alita Code to your specific needs with customizable internal and external
 - Alita: Init - Initialize Alita Code and create .promptLib folder in a root of your open workspace
 - Alita: Create Prompt - Create a new prompt in .promptLib folder
 - Alita: Extend Context - Extend context of the prompt in .promptLib folder
-- Alita: Predict - Provide a list of prompts to choose from and generate prediction based on the selected prompt
+- Alita: Predict - Provide a list of prompts to choose from and generate prediction based on the selected prompt and **its last version**
 - Alita: Similarity - Provide list of embedding to run similarity search against
 - Alita: Sync External Prompts - Sync external prompts from Alita Backend
-- Alita: Sync Embeddings - Sync embeddings from Alita Backend
 
 
 # Supported LLM providers

@@ -89,7 +89,7 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
         var display_type = "append"
         var response = {}
         if (template.external) {
-            prompt_data = {
+            prompt_data = template.label.endsWith("_datasource") ? { input: prompt } : {
                 model_settings: this.getModelSettings(),
                 user_input: prompt,
                 variables: template.variables,
@@ -115,18 +115,28 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
                     prompt_data.model_name = template.userSettings.modelName
                 }
             }
-            // find the last version of the prompt
-            var prompt_details_response = (await this.getPromptDetail(template.prompt_id));
-            var latest_prompt_version = prompt_details_response.versions.reduce((max, current) => {
-                return current.id > max.id ? current : max;
-            }, prompt_details_response.versions[0]);
-            // predict by version id
-            response = await this.request(this.predictUrl + "/" + latest_prompt_version.id)
+
+            // datasource by default
+            let base_url = this.chatWithDatasourceUrl;
+            let prompt_id = template.prompt_id;
+            if (!template.label.endsWith("_datasource")) {
+                // prompt predict
+                // find the last version of the prompt
+                base_url = this.predictUrl;
+                var prompt_details_response = await this.getPromptDetail(prompt_id);
+                prompt_id = prompt_details_response.versions.reduce((max, current) => {
+                    return current.id > max.id ? current : max;
+                }, prompt_details_response.versions[0]).id;
+            }
+
+            // datasouce predict
+            response = await this.request(base_url + "/" + prompt_id)
                 .method("POST")
                 .headers({ "Content-Type": "application/json", })
                 .body(prompt_data)
                 .auth(this.authType, this.authToken)
                 .send();
+            console.log(prompt_data);
         } else {
             if (!prompt_template) {
                 prompt_template = await this.getPromptTemplate(config, template.template);
@@ -162,7 +172,7 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
             prompt_template.display_type :
             this.workspaceService.getWorkspaceConfig().DefaultViewMode;
         // escape $ sign as later it try to read it as template variable
-        const resp_data = response.data.messages.map((message) => message.content.replace(/\$/g, "\\$")).join("\n")
+        const resp_data = response.data.response ? response.data.response.replace(/\$/g, "\\$") : response.data.messages.map((message) => message.content.replace(/\$/g, "\\$")).join("\n")
         return {
             "content": resp_data,
             "type": display_type
@@ -172,11 +182,12 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
     async syncPrompts() {
         const prompts = [];
         let promptData = [];
-        let page = 0;
-        do {
-            promptData = await this.getPrompts({ page: page++ });
-            prompts.push(...promptData);
-        } while (promptData.length > 0 && page < 10);
+        let datasourceData = [];
+        promptData = (await this.getPrompts({})).map(prompt => ( {...prompt, name: prompt.name + "_prompt" }));
+        datasourceData = (await this.getDatasources({})).map(ds => ( {...ds, name: ds.name + "_datasource" }));
+        prompts.push(...promptData);
+        prompts.push(...datasourceData);
+
 
         const _addedPrompts = []
         for (var i = 0; i < prompts.length; i++) {
@@ -233,13 +244,13 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
         return this.codeTagId && this.codeTagId !== -1;
     }
 
-    async getPrompts({ page = 0, query }) {
+    async getPrompts({ query }) {
         const hasCodeTag = await this.checkIfHasCodeTag();
         if (hasCodeTag) {
             const response = await this.request(this.getPromptsUrl, {
                 params: {
-                    offset: page * pageSize,
-                    limit: pageSize,
+                    offset: 0,
+                    limit: 0,
                     query,
                     tags: this.codeTagId
                 }
@@ -267,7 +278,9 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
         if (hasCodeTag) {
             const response = await this.request(this.getDatasourcesUrl, {
                 params: {
-                    tags: this.codeTagId
+                    tags: this.codeTagId,
+                    limit: 0,
+                    offset: 0
                 }
             })
                 .method("GET")
