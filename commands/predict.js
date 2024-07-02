@@ -28,8 +28,20 @@ module.exports = async function () {
       return;
     }    
   }
+  
   const promptsList = await workspaceService.updatePrompts();
-  const selection = await windowService.showQuickPick([...promptsList]);
+  // renderring list
+  const entities = [...promptsList].map(prompt =>
+  ({
+    label: prompt.label.replace(/(_prompt|_datasource)$/, ""),
+    description: prompt.description,
+    iconPath: new vscode.ThemeIcon(prompt.label.endsWith("_datasource")
+      ? "folder-library"
+      : (prompt.external ? "terminal" : "remote-explorer")),
+    full_name: prompt.label
+  }));
+  let selection = await windowService.showQuickPick([...entities]);
+  selection = [...promptsList].find(prompt => prompt.label === selection.full_name)
   if (!selection) return;
 
   vscode.window.withProgress({
