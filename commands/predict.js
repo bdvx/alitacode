@@ -36,7 +36,7 @@ module.exports = async function () {
     label: prompt.label.replace(/(_prompt|_datasource)$/, ""),
     description: prompt.description,
     iconPath: new vscode.ThemeIcon(prompt.label.endsWith("_datasource")
-      ? "folder-library"
+      ? "database"
       : (prompt.external ? "terminal" : "remote-explorer")),
     full_name: prompt.label
   }));

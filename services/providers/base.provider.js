@@ -137,14 +137,8 @@ module.exports = class LlmServiceProvider {
                 }
                 //Checking if variables in template and showing form to fill them
                 try {
-                    if (prompt_template.variables !== undefined) {
-                        for (const variable of Object.keys(prompt_template.variables)) {
-                            const variableValue = await vscode.window.showInputBox({
-                                title: `Enter value for ${variable}`,
-                                value: prompt_template.variables[variable],
-                            });
-                            prompt_template.variables[variable] = variableValue;
-                        }
+                    if (prompt_template.variables !== undefined) {                    
+                        prompt_template.variables = await this.handleVars(prompt_template.variables)
                     }
                 } catch (er) {
                     console.log(er)
@@ -156,6 +150,17 @@ module.exports = class LlmServiceProvider {
         } catch (err) {
             return { context : "" }
         }
+    }
+
+    async handleVars(prompt_vars) {
+        for (const variable of Object.keys(prompt_vars)) {
+            const variableValue = await vscode.window.showInputBox({
+                title: `Enter value for ${variable}`,
+                value: prompt_vars[variable],
+            });
+            prompt_vars[variable] = variableValue;
+        }
+        return prompt_vars
     }
 
     chatify_template(prompt_template, prompt) {
