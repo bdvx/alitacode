@@ -92,7 +92,6 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
             prompt_data = template.label.endsWith("_datasource") ? { input: prompt } : {
                 model_settings: this.getModelSettings(),
                 user_input: prompt,
-                variables: template.variables,
                 chat_history: template.chat_history
             };
             if (template.userSettings) {
@@ -124,9 +123,22 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
                 // find the last version of the prompt
                 base_url = this.predictUrl;
                 var prompt_details_response = await this.getPromptDetail(prompt_id);
-                prompt_id = prompt_details_response.versions.reduce((max, current) => {
+                let prompt_latest_version = prompt_details_response.versions.reduce((max, current) => {
                     return current.id > max.id ? current : max;
-                }, prompt_details_response.versions[0]).id;
+                }, prompt_details_response.versions[0]);
+
+                // add variables for external prompts if any
+                let version_details_response = await this.getPromptDetail(prompt_id, prompt_latest_version.name);
+                let external_variables = version_details_response.version_details.variables.reduce((acc, item) => {
+                    acc[item.name] = item.value;
+                    return acc;
+                }, {});
+                if (external_variables) {
+                    let configured_variables = await this.handleVars(external_variables);
+                    prompt_data.variables = Object.entries((configured_variables) ? configured_variables : [])
+                        .map(([key, value]) => ({ name: key, value: value }));
+                }        
+                prompt_id = prompt_latest_version.id;
             }
 
             // datasouce predict
@@ -156,8 +168,9 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
                 },
                 context: prompt_template.context,
                 user_input: prompt,
-                variables: Object.entries(this.getTemplateDefaults())
-                    .map(([key, value]) => ({ name: key, value: value })),
+                variables: (Object.entries(prompt_template.variables ? prompt_template.variables 
+                    : this.getTemplateDefaults())
+                    .map(([key, value]) => ({ name: key, value: value }))),
                 chat_history: prompt_template.chat_history
             };
             response = await this.request(this.predictUrl)
@@ -213,8 +226,9 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
         }
     }
 
-    async getPromptDetail(promptId) {
-        const response = await this.request(this.getPromptDetailUrl + "/" + promptId)
+    async getPromptDetail(promptId, version_name) {
+        const response = await this.request(this.getPromptDetailUrl + "/" + promptId + 
+            (version_name ? "/" + version_name : ""))
             .method("GET")
             .headers({ "Content-Type": "application/json" })
             .auth(this.authType, this.authToken)
