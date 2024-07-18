@@ -43,10 +43,19 @@ module.exports = async function () {
   let selection = await windowService.showQuickPick([...entities]);
   selection = [...promptsList].find(prompt => prompt.label === selection.full_name)
   if (!selection) return;
+  // select required version
+  if (!selection.label.endsWith("_datasource") && selection.external) {
+    var prompt_details_response = await alitaService.getPromptDetail(selection.prompt_id);
+
+    // if prompt has 2+ versions - show them
+    selection.version = (prompt_details_response.versions.length === 1
+      ? prompt_details_response.versions[0]
+      : await handleVersions(prompt_details_response.versions));
+  }
 
   vscode.window.withProgress({
     location: vscode.ProgressLocation.Window,
-    title: "Alita is baking your answer...",
+    title: "Alita prediction...",
     cancellable: false
   }, (progress) => {
     const p = new Promise(resolve => {
@@ -59,7 +68,7 @@ module.exports = async function () {
       progress.report({ increment: 5 });
       alitaService.askAlita({
         prompt: selText,
-        template: selection,
+        template: selection
       }).then((answer) => {
         progress.report({ increment: 90 });
         if (answer.type  == "split")  {
@@ -99,4 +108,14 @@ module.exports = async function () {
   });
   return p;
 });
+}
+
+async function handleVersions(versions) {
+  let available_versions = versions.map(prompt_version =>
+  ({
+    label: prompt_version.name,
+    description: "id: " + prompt_version.id
+  }));
+  let selection = await windowService.showQuickPick([...available_versions]);
+  return versions.find(prompt_version => prompt_version.name === selection.label);
 }
