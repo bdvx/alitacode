@@ -18,7 +18,6 @@ const { URL } = require("url");
 
 const apiPath = "/api/v1"
 const socketPath = "/socket.io"
-const pageSize = 10
 
 const removeTrailingSlash = (url) => {
     return url.replace(/\/$/, "");
@@ -120,15 +119,8 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
             let prompt_id = template.prompt_id;
             if (!template.label.endsWith("_datasource")) {
                 // prompt predict
-                // find the last version of the prompt
                 base_url = this.predictUrl;
-                var prompt_details_response = await this.getPromptDetail(prompt_id);
-                let prompt_latest_version = prompt_details_response.versions.reduce((max, current) => {
-                    return current.id > max.id ? current : max;
-                }, prompt_details_response.versions[0]);
-
-                // add variables for external prompts if any
-                let version_details_response = await this.getPromptDetail(prompt_id, prompt_latest_version.name);
+                let version_details_response = await this.getPromptDetail(prompt_id, template.version.name);
                 let external_variables = version_details_response.version_details.variables.reduce((acc, item) => {
                     acc[item.name] = item.value;
                     return acc;
@@ -138,7 +130,7 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
                     prompt_data.variables = Object.entries((configured_variables) ? configured_variables : [])
                         .map(([key, value]) => ({ name: key, value: value }));
                 }        
-                prompt_id = prompt_latest_version.id;
+                prompt_id = template.version.id;
             }
 
             // datasouce predict
