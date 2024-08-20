@@ -28,7 +28,7 @@ module.exports = async function () {
   if (!fs.existsSync(path.join(workspacePath, promptLib, "./prompts.json"))){
     var prompts = {}
     for (const promptKey of Object.keys(defaultPrompts)){
-      const promptName = promptKey.replace(/_/g, " ");
+      const promptName = promptKey.replace(/_/g, " ") + "_prompt";
       const promptDescription = defaultPrompts[promptKey].description;
       delete defaultPrompts[promptKey].description;
       workspaceService.writeContent(
