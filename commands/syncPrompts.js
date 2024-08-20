@@ -20,7 +20,8 @@ module.exports = async function () {
     alitaService.checkLLMConfig()
     await alitaService.serviceProvider.syncPrompts()
     alitaService.init_done = 1;
-    await workspaceService.updatePrompts()
+    await workspaceService.updatePrompts();
+    vscode.window.showInformationMessage("External prompts were synchronized");
   } catch (e) {
     await vscode.window.showErrorMessage(
       `Alita is not able to sync prompt with ${alitaService.serviceProvider.getPromptsUrl}. Error: ${e}`);

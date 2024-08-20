@@ -249,24 +249,17 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
         return this.codeTagId && this.codeTagId !== -1;
     }
 
-    async getPrompts({ query }) {
-        const hasCodeTag = await this.checkIfHasCodeTag();
-        if (hasCodeTag) {
+    async getPrompts() {
             const response = await this.request(this.getPromptsUrl, {
                 params: {
-                    offset: 0,
-                    limit: 0,
-                    query,
-                    tags: this.codeTagId
+                offset: 0
                 }
             })
                 .method("GET")
                 .headers({ "Content-Type": "application/json" })
                 .auth(this.authType, this.authToken)
                 .send();
-            return response.data.rows || [];
-        }
-        return []
+        return response.data.rows.filter(row => row.tags.some(tag => tag.name === "code")) || [];
     }
 
     async getDatasourceDetail(id) {
@@ -279,12 +272,11 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
     }
 
     async getDatasources() {
-        const hasCodeTag = await this.checkIfHasCodeTag();
-        if (hasCodeTag) {
             const response = await this.request(this.getDatasourcesUrl, {
                 params: {
                     tags: this.codeTagId,
-                    limit: 0,
+                // remove after BE alignment
+                limit: 1000,
                     offset: 0
                 }
             })
@@ -294,8 +286,6 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
                 .send();
             return response.data.rows || [];
         }
-        return []
-    }
 
     async getAppllicationDetail(id) {
         const response = await this.request(this.getApplicationDetailUrl + "/" + id)
