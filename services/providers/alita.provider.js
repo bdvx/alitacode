@@ -250,15 +250,15 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
     }
 
     async getPrompts() {
-            const response = await this.request(this.getPromptsUrl, {
-                params: {
+        const response = await this.request(this.getPromptsUrl, {
+            params: {
                 offset: 0
-                }
-            })
-                .method("GET")
-                .headers({ "Content-Type": "application/json" })
-                .auth(this.authType, this.authToken)
-                .send();
+            }
+        })
+            .method("GET")
+            .headers({ "Content-Type": "application/json" })
+            .auth(this.authType, this.authToken)
+            .send();
         return response.data.rows.filter(row => row.tags.some(tag => tag.name === "code")) || [];
     }
 
@@ -272,20 +272,19 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
     }
 
     async getDatasources() {
-            const response = await this.request(this.getDatasourcesUrl, {
-                params: {
-                    tags: this.codeTagId,
+        const response = await this.request(this.getDatasourcesUrl, {
+            params: {
                 // remove after BE alignment
                 limit: 1000,
-                    offset: 0
-                }
-            })
-                .method("GET")
-                .headers({ "Content-Type": "application/json" })
-                .auth(this.authType, this.authToken)
-                .send();
-            return response.data.rows || [];
-        }
+                offset: 0
+            }
+        })
+            .method("GET")
+            .headers({ "Content-Type": "application/json" })
+            .auth(this.authType, this.authToken)
+            .send();
+        return response.data.rows.filter(row => row.tags.some(tag => tag.name === "code")) || [];
+    }
 
     async getAppllicationDetail(id) {
         const response = await this.request(this.getApplicationDetailUrl + "/" + id)
