@@ -83,119 +83,127 @@
         "key": "ctrl+shift+r"
       }
     ],
-    "configuration": {
-      "title": "Alita Code",
-      "properties": {
-        "alitacode.enable": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable/disable this extension"
-        },
-        "alitacode.providerServerURL": {
-          "type": "string",
-          "default": "",
-          "description": "URL to LLM service provider if applicable",
-          "order": 2
-        },
-        "alitacode.authToken": {
-          "order": 3,
-          "type": "string",
-          "default": "",
-          "description": "This is API Key or Bearer token for LLM service provider if applicable"
-        },
-        "alitacode.modelName": {
-          "order": 5,
-          "type": "string",
-          "default": "gpt-4",
-          "enum": [
-            "gpt-35-turbo",
-            "gpt-35-turbo-16k",
-            "gpt-4",
-            "gpt-4-0125-preview"
-          ],
-          "description": "Model name used for local prompts, this is deployment name, and it can be different from case to case"
-        },
-        "alitacode.customModelName": {
-          "order": 6,
-          "type": "string",
-          "default": "",
-          "description": "Custom model name used for local prompts"
-        },
-        "alitacode.customModelTokens": {
-          "order": 7,
-          "type": "number",
-          "default": 4096,
-          "description": "Custom model max tokens used for local prompts"
-        },
-        "alitacode.projectId": {
-          "order": 8,
-          "type": "number",
-          "default": 1,
-          "description": "Project Id in Alita Backened, ignored for OpenAI"
-        },
-        "alitacode.integrationUid": {
-          "order": 9,
-          "type": "string",
-          "default": "Integration UUID goes here",
-          "description": "AI integration Id from Alita Backened, ignored for OpenAI"
-        },
-        "alitacode.maxTokens": {
-          "order": 10,
-          "label": "Max Tokens default value",
-          "type": "number",
-          "default": 1024,
-          "minimum": 1,
-          "maximum": 8096,
-          "description": "Max tokens value for the model"
-        },
-        "alitacode.temperature": {
-          "order": 11,
-          "label": "Temperature default value",
-          "type": "number",
-          "default": 0.8,
-          "minimum": 0,
-          "maximum": 1,
-          "description": "Temperature value for the model"
-        },
-        "alitacode.defaultViewMode": {
-          "order": 12,
-          "type": "string",
-          "default": "append",
-          "enum": [
-            "append",
-            "split",
-            "replace",
-            "prepend"
-          ],
-          "description": "Select the default display mode for the predictions"
-        },
-        "alitacode.topP": {
-          "order": 13,
-          "label": "Top P default value",
-          "type": "number",
-          "default": 0.8,
-          "minimum": 0,
-          "maximum": 1,
-          "description": "Top P value for the model"
-        },
-        "alitacode.topK": {
-          "order": 14,
-          "label": "Top K default value",
-          "type": "number",
-          "default": 40,
-          "minimum": 1,
-          "maximum": 40,
-          "description": "Top K value for the model"
-        },
-        "alitacode.verifySsl": {
-          "order": 15,
-          "label": "Verify SSL",
-          "type": "boolean",
-          "default": true,
-          "description": "Verify LLM service provider certificate"
+    "configuration": [
+      {
+        "title": "Main Settings",
+        "properties": {
+          "alitacode.providerServerURL": {
+            "order": 1,
+            "type": "string",
+            "default": "",
+            "description": "URL to LLM service provider if applicable"
+          },
+          "alitacode.authToken": {
+            "order": 2,
+            "type": "string",
+            "default": "",
+            "description": "This is API Key or Bearer token for LLM service provider if applicable"
+          },
+          "alitacode.modelName": {
+            "order": 3,
+            "type": "string",
+            "default": "gpt-4",
+            "enum": [
+              "gpt-35-turbo",
+              "gpt-35-turbo-16k",
+              "gpt-4",
+              "gpt-4-0125-preview"
+            ],
+            "description": "Model name used for local prompts, this is deployment name, and it can be different from case to case"
+          },
+          "alitacode.customModelName": {
+            "order": 4,
+            "type": "string",
+            "default": "",
+            "description": "Custom model name used for local prompts"
+          },
+          "alitacode.projectId": {
+            "order": 5,
+            "type": "number",
+            "default": 1,
+            "description": "Project Id in Alita Backened, ignored for OpenAI"
+          },
+          "alitacode.integrationUid": {
+            "order": 6,
+            "type": "string",
+            "default": "Integration UUID goes here",
+            "description": "AI integration Id from Alita Backened, ignored for OpenAI"
+          },
+          "alitacode.defaultViewMode": {
+            "order": 7,
+            "type": "string",
+            "default": "append",
+            "enum": [
+              "append",
+              "split",
+              "replace",
+              "prepend"
+            ],
+            "description": "Select the default display mode for the predictions"
+          },
+          "alitacode.verifySsl": {
+            "order": 8,
+            "label": "Verify SSL",
+            "type": "boolean",
+            "default": true,
+            "description": "Verify LLM service provider certificate"
+          },
+          "alitacode.enable": {
+            "order": 9,
+            "type": "boolean",
+            "default": true,
+            "description": "Enable/disable this extension"
+          }
+        }
+      },
+      {
+        "title": "Advanced Settings",
+        "properties": {
+          "alitacode.customModelTokens": {
+            "order": 1,
+            "type": "number",
+            "default": 4096,
+            "description": "Custom model max tokens used for local prompts"
+          },
+          "alitacode.maxTokens": {
+            "order": 2,
+            "label": "Max Tokens default value",
+            "type": "number",
+            "default": 1024,
+            "minimum": 1,
+            "maximum": 8096,
+            "description": "Max tokens value for the model"
+          },
+          "alitacode.temperature": {
+            "order": 3,
+            "label": "Temperature default value",
+            "type": "number",
+            "default": 0.8,
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Temperature value for the model"
+          },
+          "alitacode.topK": {
+            "order": 4,
+            "label": "Top K default value",
+            "type": "number",
+            "default": 40,
+            "minimum": 1,
+            "maximum": 40,
+            "description": "Top K value for the model"
+          },
+          "alitacode.topP": {
+            "order": 5,
+            "label": "Top P default value",
+            "type": "number",
+            "default": 0.8,
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Top P value for the model"
+          }
         }
       }
-    }
+    ]
   },
   "scripts": {
     "lint": "prettier --write . && eslint .",
