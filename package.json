@@ -127,7 +127,7 @@
             "type": "string",
             "default": "",
             "description": "Custom model name used for local prompts"
-          },        
+          },
           "alitacode.displayType": {
             "order": 7,
             "type": "string",
