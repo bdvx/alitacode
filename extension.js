@@ -14,7 +14,7 @@
 
 const vscode = require("vscode");
 const { workspaceService, alitaService } = require("./services");
-const { COMMAND, EXTERNAL_PROMPTS_PROVIDERS } = require("./constants/index");
+const { COMMAND, EXTERNAL_PROMPTS_PROVIDERS, WORKSPACE } = require("./constants/index");
 const {
   addContext,
   addExample,
@@ -23,7 +23,8 @@ const {
   addGoodPrediction,
   initAlita,
   syncPrompts,
-  onConfigChange
+  onConfigChange,
+  getModelNames
 } = require("./commands");
 
 async function activate(context) {
@@ -75,6 +76,17 @@ async function activate(context) {
     addGoodPrediction
   );
 
+  const getAIModelNames = vscode.commands.registerCommand(
+    COMMAND.GET_MODEL_NAMES,
+    getModelNames
+  );
+
+  let getModels = vscode.commands.registerCommand("alitacode.getModels", async () => {
+    vscode.window.showInformationMessage(`Dynamic Title: tttttttttt`);
+  });
+
+
+
   context.subscriptions.push(predictSub);
   context.subscriptions.push(createPromptSub);
   context.subscriptions.push(addContextSub);
@@ -82,6 +94,8 @@ async function activate(context) {
   context.subscriptions.push(addGoodPredictionSub);
   context.subscriptions.push(initAlitaSub);
   context.subscriptions.push(syncPromptsSub);
+  context.subscriptions.push(getAIModelNames);
+  context.subscriptions.push(getModels);
 
   const api = {
     alitaService,
@@ -90,7 +104,8 @@ async function activate(context) {
   return api
 }
 
-function deactivate() {}
+function deactivate() { }
+
 
 module.exports = {
   activate,

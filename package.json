@@ -13,7 +13,9 @@
     "Machine Learning"
   ],
   "activationEvents": [
-    "onStartupFinished"
+    "onStartupFinished",
+    "*:alitacode.getModelNames",
+    "*:alitacode.getModels"
   ],
   "repository": "https://github.com/ProjectAlita/alitacode.git",
   "main": "./out/extension.js",
@@ -38,6 +40,14 @@
       {
         "command": "alitacode.initAlita",
         "title": "Alita: Init"
+      },
+      {
+        "command": "alitacode.getModelNames",
+        "title": "Alita: getAIModelNames"
+      },
+      {
+        "command": "alitacode.getModels",
+        "title": "Alita: getAIModel"
       }
     ],
     "menus": {
@@ -104,10 +114,9 @@
             "type": "string",
             "default": "gpt-4",
             "enum": [
-              "gpt-35-turbo",
-              "gpt-35-turbo-16k",
-              "gpt-4",
-              "gpt-4-0125-preview"
+              "%alitacode.getModelNames%", 
+              "%alitacode.getModels%",
+               "%config.providerNames%"
             ],
             "description": "Model name used for local prompts, this is deployment name, and it can be different from case to case"
           },

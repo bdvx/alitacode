@@ -117,6 +117,10 @@ module.exports = class AlitaService {
     return await this.invokeMethod("stopDatasourceTask", "Stop datasource task", taskId)
   }
 
+  async getEmbeddings() {
+    return await this.invokeMethod("getEmbeddings", "Get available integrations")
+  }
+
   async chat(params) {
     return await this.invokeMethod("chat", "Chat", params)
   }
