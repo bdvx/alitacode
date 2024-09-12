@@ -24,7 +24,7 @@ const {
   initAlita,
   syncPrompts,
   onConfigChange,
-  getModelNames
+  getAIModelNames
 } = require("./commands");
 
 async function activate(context) {
@@ -45,6 +45,8 @@ async function activate(context) {
     predict.bind(null)
   );
 
+  const names =  await getAIModelNames();
+  console.log(names);
 
   const initAlitaSub = vscode.commands.registerCommand(
     COMMAND.INIT_ALITA,
@@ -76,13 +78,17 @@ async function activate(context) {
     addGoodPrediction
   );
 
-  const getAIModelNames = vscode.commands.registerCommand(
-    COMMAND.GET_MODEL_NAMES,
-    getModelNames
-  );
 
-  let getModels = vscode.commands.registerCommand("alitacode.getModels", async () => {
-    vscode.window.showInformationMessage(`Dynamic Title: tttttttttt`);
+  const updateAIModelsNames = vscode.commands.registerCommand("alitacode.updateAIModelsNames", async () => {
+    let config = vscode.workspace.getConfiguration("alitacode");
+     
+    config.update("modelName", "Alita CCC", vscode.ConfigurationTarget.Global);
+    config.update("contributes.configuration.[0].properties['alitacode.modelName'].default",
+       "Alita DDD", vscode.ConfigurationTarget.Global);
+    config.update("[0].properties['alitacode.modelName'].default",
+    "Alita FFF", vscode.ConfigurationTarget.Global);
+    console.error ("Alita extension send hello")
+    vscode.window.showInformationMessage(`Model Name updated to: Alita CCC`);
   });
 
 
@@ -95,7 +101,7 @@ async function activate(context) {
   context.subscriptions.push(initAlitaSub);
   context.subscriptions.push(syncPromptsSub);
   context.subscriptions.push(getAIModelNames);
-  context.subscriptions.push(getModels);
+  context.subscriptions.push(updateAIModelsNames);
 
   const api = {
     alitaService,

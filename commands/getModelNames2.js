@@ -13,7 +13,8 @@
 // limitations under the License.
 
 const axios = require("axios");
-const { alitaService } = require("../services");
+//const { alitaService } = require("../services");
+
 
 
 module.exports = async function () {
@@ -72,5 +73,17 @@ const sendRequest = async (url, data = null, method = "get") => {
     }
   }
 };
+
+
+const getUid = async function (integration_name) {
+ // const data = await alitaService.getEmbeddings();
+
+ const data = await fetchDataFromServer();
+  return data
+    .filter(integration => integration.name === integration_name)
+    .map(integration => integration.uid);
+}
+
+getUid("ai_dial").then(x=> console.log(x));
 
 

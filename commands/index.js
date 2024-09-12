@@ -22,7 +22,7 @@ const initAlita = require("./initAlita");
 const syncPrompts = require("./syncPrompts");
 const syncEmbeddings = require("./syncEmbeddings");
 const onConfigChange = require("./onConfigChange");
-const getModelNames = require("./getModelNames");
+const getAIModelNames = require("./getAIModelNames");
 
 module.exports = {
   addExample,
@@ -35,5 +35,5 @@ module.exports = {
   syncPrompts,
   syncEmbeddings,
   onConfigChange,
-  getModelNames
+  getAIModelNames
 };
