@@ -48,8 +48,8 @@ module.exports = {
       PARAM: {
         ENABLE: "enable",
         PROMPT_LIB: "promptLib",
-        LLM_SERVER_URL: "providerServerURL",
-        LLM_TOKEN: "authToken",
+        LLM_SERVER_URL: "llmServerUrl",
+        LLM_TOKEN: "llmAuthToken",
         LLM_PROVIDER_TYPE: "serviceProviderForLLM",
         LLM_MODEL_NAME: "modelName",
         LLM_API_VERSION: "apiVersion",
