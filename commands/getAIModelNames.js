@@ -29,5 +29,3 @@ module.exports = async function () {
   array.sort((a, b) => a - b);
   return array;
 }
-
-
