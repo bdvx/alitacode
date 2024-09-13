@@ -73,16 +73,16 @@ module.exports = class AlitaService {
     }
   }
 
-  getSocketConfig() {
+  getSocketConfig () {
     return this.invokeMethod("getSocketConfig", "Get socket config")
   }
 
-  getModelSettings() {
+  getModelSettings () {
     return this.invokeMethod("getModelSettings", "Get model settings")
   }
 
   async getPrompts({ page = 0, query }) {
-    return await this.invokeMethod("getPrompts", "List prompts", { page, query })
+    return await this.invokeMethod("getPrompts", "List prompts", {page, query})
   }
 
   async getPromptDetail(promptId) {
@@ -117,14 +117,13 @@ module.exports = class AlitaService {
     return await this.invokeMethod("stopDatasourceTask", "Stop datasource task", taskId)
   }
 
-  async getEmbeddings() {
-    return await this.invokeMethod("getEmbeddings", "Get available integrations")
-  }
-
   async chat(params) {
     return await this.invokeMethod("chat", "Chat", params)
   }
 
+  async getEmbeddings() {
+    return await this.invokeMethod("getEmbeddings", "Get available integrations")
+  }
 
   async getAIModelNames() {
     const data = await this.getEmbeddings();

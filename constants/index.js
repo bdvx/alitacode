@@ -62,8 +62,7 @@ module.exports = {
         CUSTOM_MODEL_NAME: "customModelName",
         DEFAULT_TOKENS: "customModelTokens",
         DEFAULT_VIEW_MODE: "defaultViewMode",
-        VERIFY_SSL: "verifySsl",
-        PROVIDERS_NAMES: "providerNames",
+        VERIFY_SSL: "verifySsl"
       },
     },
   },
@@ -76,7 +75,6 @@ module.exports = {
     PREDICT: "alitacode.predict",
     OPEN_SETTINGS: "workbench.action.openSettings",
     ADD_GOOD_PREDICTION: "alitacode.addGoodPrediction",
-    GET_MODEL_NAMES: "alitacode.getModelNames",
   },
   TEXT: {
     ALITA_ACTIVATED: "Alita was activated! Please specify configuration",

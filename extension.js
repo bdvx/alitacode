@@ -14,7 +14,7 @@
 
 const vscode = require("vscode");
 const { workspaceService, alitaService } = require("./services");
-const { COMMAND, EXTERNAL_PROMPTS_PROVIDERS, WORKSPACE } = require("./constants/index");
+const { COMMAND, EXTERNAL_PROMPTS_PROVIDERS } = require("./constants/index");
 const {
   addContext,
   addExample,
@@ -43,7 +43,8 @@ async function activate(context) {
     COMMAND.PREDICT,
     predict.bind(null)
   );
- 
+
+
   const initAlitaSub = vscode.commands.registerCommand(
     COMMAND.INIT_ALITA,
     initAlita
@@ -89,8 +90,7 @@ async function activate(context) {
   return api
 }
 
-function deactivate() { }
-
+function deactivate() {}
 
 module.exports = {
   activate,
