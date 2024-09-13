@@ -96,7 +96,7 @@
           "alitacode.llmAuthToken": {
             "order": 2,
             "type": "string",
-            "default": ""        
+            "default": ""
           },
           "alitacode.projectId": {
             "order": 3,

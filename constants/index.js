@@ -60,8 +60,8 @@ module.exports = {
         PROJECTID: "projectId",
         INTEGRATIONID: "integrationUid",
         CUSTOM_MODEL_NAME: "customModelName",
-        DEFAULT_TOKENS: "customModelTokens",
-        DEFAULT_VIEW_MODE: "defaultViewMode",
+        DEFAULT_TOKENS: "customModelSize",
+        DISPLAY_TYPE: "displayType",
         VERIFY_SSL: "verifySsl"
       },
     },

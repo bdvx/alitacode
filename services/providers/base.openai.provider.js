@@ -53,7 +53,7 @@ module.exports = class BaseOpenAIProvider extends LlmServiceProvider {
                 "content": events.choices[0].message.content,
                 "type": prompt_template.display_type ? 
                     prompt_template.display_type : 
-                    this.workspaceService.getWorkspaceConfig().DefaultViewMode
+                    this.workspaceService.getWorkspaceConfig().DisplayType
             }
             
         } catch (err) {
