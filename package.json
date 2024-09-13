@@ -13,9 +13,7 @@
     "Machine Learning"
   ],
   "activationEvents": [
-    "onStartupFinished",
-    "*:alitacode.getModelNames",
-    "*:alitacode.getModels"
+    "onStartupFinished"
   ],
   "repository": "https://github.com/ProjectAlita/alitacode.git",
   "main": "./out/extension.js",
@@ -46,7 +44,7 @@
         "title": "Alita: getAIModelNames"
       },
       {
-        "command": "alitacode.getModels",
+        "command": "alitacode.updateAIModelsNames",
         "title": "Alita: getAIModel"
       }
     ],
@@ -116,7 +114,7 @@
             "enum": [
               "%alitacode.getModelNames%", 
               "%alitacode.getModels%",
-               "%config.providerNames%"
+              "%config.providerNames%"
             ],
             "description": "Model name used for local prompts, this is deployment name, and it can be different from case to case"
           },
