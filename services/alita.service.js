@@ -147,7 +147,7 @@ module.exports = class AlitaService {
       .map(integration => integration.uid);
   }
 
-  async getAIModelName(integrationConfigName) {
+  async getAIModelIntegrationName(integrationConfigName) {
     const data = await this.getEmbeddings();
     return data
       .filter(integration => integration.config.name === integrationConfigName)
