@@ -55,8 +55,8 @@ Tailor Alita Code to your specific needs with customizable internal and external
 This extension contributes the following settings:
 - alitacode.enable: enable/disable this extension
 - alitacode.serviceProviderForLLM: select the LLM provider (Alita, OpenAI, Azure Open AI)
-- alitacode.authToken: API key for the selected LLM provider
-- alitacode.providerServerURL: URL of the LLM provider server
+- alitacode.llmAuthToken: API key for the selected LLM provider
+- alitacode.llmServerUrl: URL of the LLM provider server
 - alitacode.apiVersion: Api version, mostly applicable for Azure OpenAI compatible APIs
 - alitacode.modelName: Default model name used for local prompts (Can be overwritten in prompt)
 - alitacode.projectId (optional): Project ID for external prompts (ignored for any OpenAI)
