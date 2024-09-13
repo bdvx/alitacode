@@ -38,14 +38,6 @@
       {
         "command": "alitacode.initAlita",
         "title": "Alita: Init"
-      },
-      {
-        "command": "alitacode.getModelNames",
-        "title": "Alita: getAIModelNames"
-      },
-      {
-        "command": "alitacode.updateAIModelsNames",
-        "title": "Alita: getAIModel"
       }
     ],
     "menus": {
@@ -112,9 +104,10 @@
             "type": "string",
             "default": "gpt-4",
             "enum": [
-              "%alitacode.getModelNames%", 
-              "%alitacode.getModels%",
-              "%config.providerNames%"
+              "gpt-35-turbo",
+              "gpt-35-turbo-16k",
+              "gpt-4",
+              "gpt-4-0125-preview"
             ],
             "description": "Model name used for local prompts, this is deployment name, and it can be different from case to case"
           },
