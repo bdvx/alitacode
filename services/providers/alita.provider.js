@@ -235,7 +235,7 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
             params: { 
                 query: "code", 
                 offset: 0, 
-                limit: 0
+                limit: 1000
             }})
             .method("GET")
             .headers({ "Content-Type": "application/json" })
