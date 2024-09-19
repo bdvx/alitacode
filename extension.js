@@ -13,8 +13,6 @@
 // limitations under the License.
 
 const vscode = require("vscode");
-const { register } = require("ts-node");
-register();
 const { workspaceService, alitaService } = require("./services");
 const { COMMAND, EXTERNAL_PROMPTS_PROVIDERS } = require("./constants/index");
 const {
@@ -30,6 +28,9 @@ const {
 //import * as tsImport from "ts-import";
 import { CreatePromptPanel } from "./panels/CreatePromptPanel";
 async function activate(context) {
+  /*const asyncResult = await tsImport.load("./panels/CreatePromptPanel.ts", {
+    // allowConfigurationWithComments: false,
+  });*/
 
   await vscode.commands.executeCommand("setContext", "alitacode.ExtentablePlatforms", EXTERNAL_PROMPTS_PROVIDERS);
   try {

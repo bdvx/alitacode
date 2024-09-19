@@ -2,6 +2,9 @@ const vscode = require("vscode");
 //import { provideVSCodeDesignSystem, allComponents } from "@vscode/webview-ui-toolkit";
 //provideVSCodeDesignSystem().register(allComponents);
 export class CreatePromptPanel {
+ /* private _panel: any;
+  private _disposables: any[];
+  private static currentPanel: any;*/
 
   constructor(panel, extensionUri) {
     this._panel = panel;
