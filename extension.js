@@ -13,6 +13,8 @@
 // limitations under the License.
 
 const vscode = require("vscode");
+const { register } = require("ts-node");
+register();
 const { workspaceService, alitaService } = require("./services");
 const { COMMAND, EXTERNAL_PROMPTS_PROVIDERS } = require("./constants/index");
 const {
@@ -25,17 +27,18 @@ const {
   syncPrompts,
   onConfigChange
 } = require("./commands");
-
+//import * as tsImport from "ts-import";
+import { CreatePromptPanel } from "./panels/CreatePromptPanel";
 async function activate(context) {
+
   await vscode.commands.executeCommand("setContext", "alitacode.ExtentablePlatforms", EXTERNAL_PROMPTS_PROVIDERS);
   try {
     await onConfigChange();
   } catch (error) {
     console.error(error);
   }
-  
 
-  vscode.workspace.onDidChangeConfiguration(async (e) => {
+  vscode.workspace.onDidChangeConfiguration(async () => {
     await onConfigChange();
   });
 
@@ -60,6 +63,10 @@ async function activate(context) {
     createPrompt.bind(null, workspaceService.promptsList)
   );
 
+  const createPromptSubModal = vscode.commands.registerCommand(COMMAND.CREATE_PROMPT_MODAL, () => {
+    CreatePromptPanel.render(context, workspaceService.promptsList);
+  })
+
   const addContextSub = vscode.commands.registerCommand(
     COMMAND.ADD_CONTEXT,
     addContext.bind(null, workspaceService.promptsList)
@@ -77,6 +84,7 @@ async function activate(context) {
 
   context.subscriptions.push(predictSub);
   context.subscriptions.push(createPromptSub);
+  context.subscriptions.push(createPromptSubModal);
   context.subscriptions.push(addContextSub);
   context.subscriptions.push(addExampleSub);
   context.subscriptions.push(addGoodPredictionSub);
