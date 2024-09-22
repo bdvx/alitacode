@@ -15,15 +15,14 @@ const extensionConfig = {
   outfile: "./out/extension.js",
   external: ["vscode"],
 };
-/*
+
 const createPromptConfig = {
   ...baseConfig,
   target: "es2020",
   format: "esm",
-  entryPoints: ["./panels/CreatePromptPanel.js"],
-  outfile: "./out/createPromptPanel.js",
-  external: ["vscode"],
-};*/
+  entryPoints: ["./panels/main.ts"],
+  outfile: "./out/webview.js"
+};
 
 const watchConfig = {
   watch: {
@@ -53,14 +52,14 @@ const watchConfig = {
         ...watchConfig,
       });
       await build({
-        //...createPromptConfig,
+        ...createPromptConfig,
         ...watchConfig,
       });
       console.log("[watch] build finished");
     } else {
       // Build extension and webview code
       await build(extensionConfig);
-      //await build(createPromptConfig);
+      await build(createPromptConfig);
       console.log("build complete");
     }
   } catch (err) {

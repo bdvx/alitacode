@@ -19,9 +19,9 @@ const {
 } = require("../services");
 const { TEXT } = require("../constants");
 
-module.exports = async function (items) {
+module.exports = async function (items, {promptName, promptDescription, context}) {
   const { promptLib, workspacePath } = workspaceService.getWorkspaceConfig();
-  const promptName = await windowService.showInputBox({
+  /*const promptName = await windowService.showInputBox({
     title: TEXT.ENTER_PROMPT_NAME,
   });
   const promptDescription = await windowService.showInputBox({
@@ -29,8 +29,8 @@ module.exports = async function (items) {
   });
   const context = await windowService.showInputBox({
     title: TEXT.ENTER_PROMPT_CONTEXT,
-  });
-  if (!promptName || !promptDescription || !context) return;
+  })
+  if (!promptName || !promptDescription || !context) return;*/
 
   const normalizedPromptName = promptName.replace(/[^\w\d]/g, "_");
   const newPromptFileName = `${normalizedPromptName}.yaml`;

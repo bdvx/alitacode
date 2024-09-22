@@ -1,6 +1,7 @@
+import {getUri} from "../utilities/getUri";
+import {createPrompt} from "../commands";
+
 const vscode = require("vscode");
-//import { provideVSCodeDesignSystem, allComponents } from "@vscode/webview-ui-toolkit";
-//provideVSCodeDesignSystem().register(allComponents);
 export class CreatePromptPanel {
  /* private _panel: any;
   private _disposables: any[];
@@ -29,14 +30,11 @@ export class CreatePromptPanel {
 
   _addReceiveMessageHandler(context, workspaceServicePrompts) {
     CreatePromptPanel.currentPanel._panel.webview.onDidReceiveMessage(
-        message => {
+        async message => {
           switch (message.command) {
             case "save":
-              const {promptName, promptDescription, newPromptFileName} = message.promptSettings
-              workspaceServicePrompts.add(
-                  { label: promptName, description: promptDescription, template: newPromptFileName }
-              );
-              console.log({w: Array.from(workspaceServicePrompts)})
+              //const {promptName, promptDescription, newPromptFileName} = message.promptSettings
+              await createPrompt(workspaceServicePrompts, message.promptSettings)
               vscode.window.showInformationMessage( "Prompt saved!");
               return;
           }
@@ -60,6 +58,7 @@ export class CreatePromptPanel {
   }
 
   _getWebviewContent(webview, extensionUri) {
+    const webviewUri = getUri(webview, extensionUri, ["out", "webview.js"]);
     return /*html*/ `
     <!DOCTYPE html>
     <html lang="en">
@@ -72,7 +71,7 @@ export class CreatePromptPanel {
         <script>
           const vscode = acquireVsCodeApi();
            const basicElementsArray = [
-              "promptName", "promptDescription"
+              "promptName", "promptDescription", "context"
             ]
             const integrationElementsArray = [
               "promptModel",
@@ -82,7 +81,7 @@ export class CreatePromptPanel {
               "promptMaxTokens",
             ]
           function useProjectIntegrationFields(state) {
-            if(state.checked){
+            if(!state.checked){
               integrationElementsArray.forEach(
                (element) => document.getElementsByName(element)[0].setAttribute("disabled", "true"))
             } else {
@@ -101,15 +100,17 @@ export class CreatePromptPanel {
                 promptSettings
             })
           }
+          useProjectIntegrationFields({checked: false})
         </script>
-        <!--<vscode-text-field name="promptName">Name</vscode-text-field>
+        <script type="module" src="${webviewUri}"></script>
+        <vscode-text-field name="promptName">Name</vscode-text-field>
         <br />
         <vscode-text-field  name="promptDescription">Description</vscode-text-field>
         <br />
-        <vscode-text-area name="promptContext" rows="4" cols="50">Context</vscode-text-area>
+        <vscode-text-area name="context" rows="4" cols="50">Context</vscode-text-area>
         <br />
         <label>
-          <vscode-checkbox id="useProjectIntegration" onclick="useProjectIntegrationFields()" class="ws-input" />
+          <vscode-checkbox id="useProjectIntegration" onclick="useProjectIntegrationFields(this)" class="ws-input" />
           Use project integration settings in context file
         </label>
         <br />
@@ -122,8 +123,8 @@ export class CreatePromptPanel {
         <vscode-text-field  name="promptTemperature">Temperature</vscode-text-field>
         <br />
        <vscode-text-field  name="promptMaxTokens">Max Tokens</vscode-text-field>
-       <vscode-button appearance="primary" name="""save-prompt">Save</vscode-button>-->
-        <input type="text" name="promptName">Name</input>
+       <vscode-button appearance="primary" name="save-prompt" onclick="savePrompt()">Save</vscode-button>
+       <!-- <input type="text" name="promptName">Name</input>
         <br />
         <input type="text"  name="promptDescription">Description</input>
         <br />
@@ -146,7 +147,7 @@ export class CreatePromptPanel {
         <input type="text" name="promptTemperature">Temperature</input>
         <br />
        <input type="text" name="promptMaxTokens">Max Tokens</input>
-       <button appearance="primary" name="save-prompt" onclick="savePrompt()">Save</button>
+       <button appearance="primary" name="save-prompt">Save</button>-->
     </body>
     </html>
     `;

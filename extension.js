@@ -25,13 +25,9 @@ const {
   syncPrompts,
   onConfigChange
 } = require("./commands");
-//import * as tsImport from "ts-import";
 import { CreatePromptPanel } from "./panels/CreatePromptPanel";
-async function activate(context) {
-  /*const asyncResult = await tsImport.load("./panels/CreatePromptPanel.ts", {
-    // allowConfigurationWithComments: false,
-  });*/
 
+async function activate(context){
   await vscode.commands.executeCommand("setContext", "alitacode.ExtentablePlatforms", EXTERNAL_PROMPTS_PROVIDERS);
   try {
     await onConfigChange();
