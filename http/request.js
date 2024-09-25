@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const axios = require("axios");
+const client = require("./client");
 
 module.exports = class Request {
   constructor(url, options) {
@@ -31,9 +31,7 @@ module.exports = class Request {
   }
 
   headers(headers, isNew) {
-    this._options.headers = isNew
-      ? headers
-      : { ...this._options.headers, ...headers };
+    this._options.headers = isNew ? headers : { ...this._options.headers, ...headers };
     return this;
   }
 
@@ -65,6 +63,6 @@ module.exports = class Request {
   }
 
   send() {
-    return axios(this._url, this._options);
+    return client(this._url, this._options);
   }
 };
