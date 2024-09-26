@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const vscode = require("vscode");
-const { workspaceService, alitaService, outputService } = require("./services");
+const { workspaceService, alitaService } = require("./services");
 const { COMMAND, EXTERNAL_PROMPTS_PROVIDERS } = require("./constants/index");
 const {
   addContext,
@@ -25,6 +25,7 @@ const {
   syncPrompts,
   onConfigChange,
 } = require("./commands");
+const OutputService = require("./services/output.service");
 
 async function activate(context) {
   await vscode.commands.executeCommand("setContext", "alitacode.ExtentablePlatforms", EXTERNAL_PROMPTS_PROVIDERS);
@@ -69,7 +70,7 @@ async function activate(context) {
   context.subscriptions.push(initAlitaSub);
   context.subscriptions.push(syncPromptsSub);
 
-  context.subscriptions.push(outputService.getChannel());
+  context.subscriptions.push(OutputService.getChannel());
 
   const api = {
     alitaService,
@@ -79,7 +80,7 @@ async function activate(context) {
 }
 
 function deactivate() {
-  outputService.dispose();
+  OutputService.dispose();
 }
 
 module.exports = {
