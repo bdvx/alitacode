@@ -72,7 +72,6 @@ module.exports = {
     ADD_EXAMPLE: "alitacode.addExample",
     ADD_CONTEXT: "alitacode.addContext",
     CREATE_PROMPT: "alitacode.createPrompt",
-    CREATE_PROMPT_MODAL: "alitacode.createPromptModal",
     PREDICT: "alitacode.predict",
     OPEN_SETTINGS: "workbench.action.openSettings",
     ADD_GOOD_PREDICTION: "alitacode.addGoodPrediction",

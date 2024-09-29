@@ -56,11 +56,8 @@ async function activate(context){
   );
 
   const createPromptSub = vscode.commands.registerCommand(
-    COMMAND.CREATE_PROMPT,
-    createPrompt.bind(null, workspaceService.promptsList)
-  );
-
-  const createPromptSubModal = vscode.commands.registerCommand(COMMAND.CREATE_PROMPT_MODAL, () => {
+      COMMAND.CREATE_PROMPT,
+      () => {
     CreatePromptPanel.render(context, workspaceService.promptsList);
   })
 
@@ -81,7 +78,6 @@ async function activate(context){
 
   context.subscriptions.push(predictSub);
   context.subscriptions.push(createPromptSub);
-  context.subscriptions.push(createPromptSubModal);
   context.subscriptions.push(addContextSub);
   context.subscriptions.push(addExampleSub);
   context.subscriptions.push(addGoodPredictionSub);

@@ -33,7 +33,6 @@ export class CreatePromptPanel {
         async message => {
           switch (message.command) {
             case "save":
-              //const {promptName, promptDescription, newPromptFileName} = message.promptSettings
               await createPrompt(workspaceServicePrompts, message.promptSettings)
               vscode.window.showInformationMessage( "Prompt saved!");
               return;
@@ -74,19 +73,33 @@ export class CreatePromptPanel {
               "promptName", "promptDescription", "context"
             ]
             const integrationElementsArray = [
-              "promptModel",
-              "promptTopP",
-              "promptTopK",
-              "promptTemperature",
-              "promptMaxTokens",
+              "temperature",
+              "model_name",
+              "max_tokens",
+              "top_p",
+              "top_k"
             ]
           function useProjectIntegrationFields(state) {
+             console.log({state})
             if(!state.checked){
               integrationElementsArray.forEach(
-               (element) => document.getElementsByName(element)[0].setAttribute("disabled", "true"))
+               (element) => document.getElementsByName(element)[0].removeAttribute("disabled"))
             } else {
               integrationElementsArray.forEach(
-               (element) => document.getElementsByName(element)[0].removeAttribute("disabled"))
+               (element) => document.getElementsByName(element)[0].setAttribute("disabled", "true"))
+            }
+          }
+          function addVariable() {
+             const dataGrid = document.getElementById("variables")
+             const varName = document.getElementById("varName").value
+             const varVal = document.getElementById("varVal").value
+             if(varName !== '' && varVal !== ''){
+               dataGrid.rowsData = [...dataGrid.rowsData, 
+                {
+                  name: varName,
+                  value: varVal
+                }
+              ];
             }
           }
           function savePrompt() {
@@ -95,59 +108,59 @@ export class CreatePromptPanel {
                 (element) => { promptSettings[element] = document.getElementsByName(element)[0].value })
             const normalizedPromptName = promptSettings.promptName.replace(/[^\\w\\d]/g, "_");
             promptSettings.newPromptFileName = normalizedPromptName + ".yaml";
+            if(document.getElementById('useProjectIntegration').checked){
+              promptSettings.integration_settings = Object.create({})
+              integrationElementsArray.forEach(
+                  (element) => { 
+                    promptSettings.integration_settings[element] = document.getElementsByName(element)[0].value 
+                  })
+              }
+            const dataGrid = document.getElementById("variables")
+            if(dataGrid.rowsData.length >= 1){
+              promptSettings.variables = Object.create({})
+              dataGrid.rowsData.forEach(
+                  (element) => { 
+                    promptSettings.variables[element.name] = element.value 
+                  })
+            }
             vscode.postMessage({
                 command: 'save',
                 promptSettings
             })
           }
-          useProjectIntegrationFields({checked: false})
         </script>
         <script type="module" src="${webviewUri}"></script>
         <vscode-text-field name="promptName">Name</vscode-text-field>
         <br />
-        <vscode-text-field  name="promptDescription">Description</vscode-text-field>
+        <vscode-text-field name="promptDescription">Description</vscode-text-field>
         <br />
         <vscode-text-area name="context" rows="4" cols="50">Context</vscode-text-area>
+        <br />
+        <label>
+          Variables
+          <br />
+          <vscode-text-field id="varName">Name</vscode-text-field>
+          <vscode-text-field id="varVal">Value</vscode-text-field>
+          <vscode-button appearance="secondary" name="add-var" onclick="addVariable()">Add</vscode-button>
+          <vscode-data-grid id="variables" aria-label="Basic"></vscode-data-grid>
+        </label>
         <br />
         <label>
           <vscode-checkbox id="useProjectIntegration" onclick="useProjectIntegrationFields(this)" class="ws-input" />
           Use project integration settings in context file
         </label>
         <br />
-        <vscode-text-field  name="promptModel">Model</vscode-text-field>
+        <vscode-text-field disabled="true" name="model_name">Model</vscode-text-field>
         <br />
-        <vscode-text-field  name="promptTopP">Top P</vscode-text-field>
+        <vscode-text-field disabled="true" name="top_p">Top P</vscode-text-field>
         <br />
-        <vscode-text-field  name="promptTopK">Top K</vscode-text-field>
+        <vscode-text-field disabled="true" name="top_k">Top K</vscode-text-field>
         <br />
-        <vscode-text-field  name="promptTemperature">Temperature</vscode-text-field>
+        <vscode-text-field disabled="true" name="temperature">Temperature</vscode-text-field>
         <br />
-       <vscode-text-field  name="promptMaxTokens">Max Tokens</vscode-text-field>
+       <vscode-text-field disabled="true" name="max_tokens">Max Tokens</vscode-text-field>
+       <br />
        <vscode-button appearance="primary" name="save-prompt" onclick="savePrompt()">Save</vscode-button>
-       <!-- <input type="text" name="promptName">Name</input>
-        <br />
-        <input type="text"  name="promptDescription">Description</input>
-        <br />
-        <textarea name="promptContext" rows="4" cols="50">Context</textarea>
-        <br />
-        <label>
-          <input type="checkbox" 
-          id="useProjectIntegration" 
-          onclick="useProjectIntegrationFields(this)" 
-          class="ws-input" />
-          Use project integration settings in context file
-        </label>
-        <br />
-        <input type="text" name="promptModel">Model</input>
-        <br />
-        <input type="text" name="promptTopP">Top P</input>
-        <br />
-        <input type="text" name="promptTopK">Top K</input>
-        <br />
-        <input type="text" name="promptTemperature">Temperature</input>
-        <br />
-       <input type="text" name="promptMaxTokens">Max Tokens</input>
-       <button appearance="primary" name="save-prompt">Save</button>-->
     </body>
     </html>
     `;
