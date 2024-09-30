@@ -51,7 +51,7 @@ module.exports = {
         LLM_SERVER_URL: "llmServerUrl",
         LLM_TOKEN: "llmAuthToken",
         LLM_PROVIDER_TYPE: "serviceProviderForLLM",
-        LLM_MODEL_NAME: "modelName",
+        LLM_MODEL_NAME: "llmModelName",
         LLM_API_VERSION: "apiVersion",
         TOP_P: "topP",
         TOP_K: "topK",

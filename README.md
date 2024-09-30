@@ -58,7 +58,7 @@ This extension contributes the following settings:
 - alitacode.llmAuthToken: API key for the selected LLM provider
 - alitacode.llmServerUrl: URL of the LLM provider server
 - alitacode.apiVersion: Api version, mostly applicable for Azure OpenAI compatible APIs
-- alitacode.modelName: Default model name used for local prompts (Can be overwritten in prompt)
+- alitacode.llmModelName: Default model name used for local prompts (Can be overwritten in prompt)
 - alitacode.projectId (optional): Project ID for external prompts (ignored for any OpenAI)
 - alitacode.integrationUid (optional): Integration UID for external prompts (ignored for any OpenAI)
 - alitacode.temperature: Default temperature for model (Can be overwritten in prompt)

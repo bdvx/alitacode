@@ -110,7 +110,7 @@
             "default": "Integration UUID goes here",
             "description": "AI integration Id from Alita Backened, ignored for OpenAI"
           },
-          "alitacode.modelName": {
+          "alitacode.llmModelName": {
             "order": 5,
             "type": "string",
             "default": "gpt-4",
