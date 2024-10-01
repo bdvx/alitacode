@@ -109,7 +109,7 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
                 if (template.userSettings.topK) {
                     prompt_data.top_k = template.userSettings.topK
                 }
-                if (template.userSettings.llmModelName) {
+                if (template.userSettings.modelName) {
                     prompt_data.model_name = template.userSettings.llmModelName
                 }
             }
