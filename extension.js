@@ -23,8 +23,9 @@ const {
   addGoodPrediction,
   initAlita,
   syncPrompts,
-  onConfigChange
+  onConfigChange,
 } = require("./commands");
+const OutputService = require("./services/output.service");
 
 async function activate(context) {
   await vscode.commands.executeCommand("setContext", "alitacode.ExtentablePlatforms", EXTERNAL_PROMPTS_PROVIDERS);
@@ -33,27 +34,16 @@ async function activate(context) {
   } catch (error) {
     console.error(error);
   }
-  
 
-  vscode.workspace.onDidChangeConfiguration(async (e) => {
+  vscode.workspace.onDidChangeConfiguration(async () => {
     await onConfigChange();
   });
 
-  const predictSub = vscode.commands.registerCommand(
-    COMMAND.PREDICT,
-    predict.bind(null)
-  );
+  const predictSub = vscode.commands.registerCommand(COMMAND.PREDICT, predict.bind(null));
 
+  const initAlitaSub = vscode.commands.registerCommand(COMMAND.INIT_ALITA, initAlita);
 
-  const initAlitaSub = vscode.commands.registerCommand(
-    COMMAND.INIT_ALITA,
-    initAlita
-  );
-  
-  const syncPromptsSub = vscode.commands.registerCommand(
-    COMMAND.SYNC_PROMPTS,
-    syncPrompts
-  );
+  const syncPromptsSub = vscode.commands.registerCommand(COMMAND.SYNC_PROMPTS, syncPrompts);
 
   const createPromptSub = vscode.commands.registerCommand(
     COMMAND.CREATE_PROMPT,
@@ -70,10 +60,7 @@ async function activate(context) {
     addExample.bind(null, workspaceService.promptsList)
   );
 
-  const addGoodPredictionSub = vscode.commands.registerCommand(
-    COMMAND.ADD_GOOD_PREDICTION,
-    addGoodPrediction
-  );
+  const addGoodPredictionSub = vscode.commands.registerCommand(COMMAND.ADD_GOOD_PREDICTION, addGoodPrediction);
 
   context.subscriptions.push(predictSub);
   context.subscriptions.push(createPromptSub);
@@ -83,14 +70,18 @@ async function activate(context) {
   context.subscriptions.push(initAlitaSub);
   context.subscriptions.push(syncPromptsSub);
 
+  context.subscriptions.push(OutputService.getChannel());
+
   const api = {
     alitaService,
-    workspaceService
-  }
-  return api
+    workspaceService,
+  };
+  return api;
 }
 
-function deactivate() {}
+function deactivate() {
+  OutputService.dispose();
+}
 
 module.exports = {
   activate,
