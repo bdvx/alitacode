@@ -162,7 +162,7 @@ module.exports = class CarrierServiceProvider extends LlmServiceProvider {
         }
         display_type = (prompt_template && prompt_template.display_type) ?
             prompt_template.display_type :
-            this.workspaceService.getWorkspaceConfig().DefaultViewMode;
+            this.workspaceService.getWorkspaceConfig().DisplayType;
         const response = await this.request(this.predictUrl)
             .method("POST")
             .headers({ "Content-Type": "application/json", })
