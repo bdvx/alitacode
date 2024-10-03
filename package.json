@@ -87,13 +87,13 @@
       {
         "title": "Main Settings",
         "properties": {
-          "alitacode.llmServerUrl": {
+          "alitacode.LLMServerUrl": {
             "order": 1,
             "type": "string",
             "default": "",
             "description": "URL to LLM service provider"
           },
-          "alitacode.llmAuthToken": {
+          "alitacode.LLMAuthToken": {
             "order": 2,
             "type": "string",
             "default": ""
@@ -110,7 +110,7 @@
             "default": "Integration UUID goes here",
             "description": "AI integration Id from Alita Backened, ignored for OpenAI"
           },
-          "alitacode.llmModelName": {
+          "alitacode.LLMModelName": {
             "order": 5,
             "type": "string",
             "default": "gpt-4",
