@@ -74,10 +74,10 @@ export class CreatePromptPanel {
             ]
             const integrationElementsArray = [
               "temperature",
-              "model_name",
-              "max_tokens",
-              "top_p",
-              "top_k"
+              "LLMModelName",
+              "maxTokens",
+              "topP",
+              "topK"
             ]
           function useProjectIntegrationFields(state) {
              console.log({state})
@@ -150,15 +150,15 @@ export class CreatePromptPanel {
           Use project integration settings in context file
         </label>
         <br />
-        <vscode-text-field disabled="true" name="model_name">Model</vscode-text-field>
+        <vscode-text-field disabled="true" name="LLMModelName">Model</vscode-text-field>
         <br />
-        <vscode-text-field disabled="true" name="top_p">Top P</vscode-text-field>
+        <vscode-text-field disabled="true" name="topP">Top P</vscode-text-field>
         <br />
-        <vscode-text-field disabled="true" name="top_k">Top K</vscode-text-field>
+        <vscode-text-field disabled="true" name="topK">Top K</vscode-text-field>
         <br />
         <vscode-text-field disabled="true" name="temperature">Temperature</vscode-text-field>
         <br />
-       <vscode-text-field disabled="true" name="max_tokens">Max Tokens</vscode-text-field>
+       <vscode-text-field disabled="true" name="maxTokens">Max Tokens</vscode-text-field>
        <br />
        <vscode-button appearance="primary" name="save-prompt" onclick="savePrompt()">Save</vscode-button>
     </body>
