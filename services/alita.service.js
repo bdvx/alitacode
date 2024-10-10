@@ -12,22 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const Notifications = require("../utils/notifications");
 const WorkspaceService = require("./workspace.service");
 const Request = require("../http/request");
-const vscode = require("vscode");
 const llmServierProvider = require("./providers/index");
 
 module.exports = class AlitaService {
   constructor() {
     this.request = (url, options) => new Request(url, options);
     this.workspaceService = new WorkspaceService();
-    this.currentProvider = this.workspaceService.getWorkspaceConfig().LLMProvider
+    this.currentProvider = this.workspaceService.getWorkspaceConfig().LLMProvider;
     this.serviceProvider = undefined;
     this.init_done = 0;
   }
 
   checkLLMConfig() {
-    const newProvier = this.workspaceService.getWorkspaceConfig().LLMProvider
+    const newProvier = this.workspaceService.getWorkspaceConfig().LLMProvider;
     try {
       if (newProvier !== this.currentProvider && newProvier !== undefined) {
         this.serviceProvider = new llmServierProvider[newProvier]();
@@ -42,82 +42,82 @@ module.exports = class AlitaService {
         this.init_done = 0;
       }
     } catch (ex) {
-      console.log(ex)
+      console.log(ex);
       this.serviceProvider = undefined;
     }
-    console.log(this.serviceProvider)
+    console.log(this.serviceProvider);
   }
 
   async invokeMethod(functionName, fnDesc, params) {
     try {
-      this.checkLLMConfig()
+      this.checkLLMConfig();
       if (this.serviceProvider[functionName]) {
         const result = await this.serviceProvider[functionName](params);
-        return result
+        return result;
       } else {
-        return `${fnDesc} not supported by this LLM Provider`
+        return `${fnDesc} not supported by this LLM Provider`;
       }
-    } catch (ex) {
-      await vscode.window.showErrorMessage(`Alita Code ${functionName} error: ${ex.stack}`);
-      return "You need to configure LLM Provider first"
+    } catch (error) {
+      await Notifications.showError({ error, message: `Alita Code ${functionName}`, showOutputButton: true });
+      return "You need to configure LLM Provider first";
     }
   }
 
   async askAlita({ prompt, template, prompt_template = undefined }) {
     try {
-      this.checkLLMConfig()
-      return await this.serviceProvider.predict(template, prompt, prompt_template)
-    } catch (ex) {
-      await vscode.window.showErrorMessage(`Alita is not able to connect ${ex.stack}`);
-      return "You need to configure LLM Provider first"
+      this.checkLLMConfig();
+      return await this.serviceProvider.predict(template, prompt, prompt_template);
+    } catch (error) {
+      await Notifications.showError({ error, message: "Alita is not able to connect", showOutputButton: true });
+      return "You need to configure LLM Provider first";
     }
   }
 
-  getSocketConfig () {
-    return this.invokeMethod("getSocketConfig", "Get socket config")
+  getSocketConfig() {
+    return this.invokeMethod("getSocketConfig", "Get socket config");
   }
 
-  getModelSettings () {
-    return this.invokeMethod("getModelSettings", "Get model settings")
+  getModelSettings() {
+    return this.invokeMethod("getModelSettings", "Get model settings");
   }
 
   async getPrompts({ page = 0, query }) {
-    return await this.invokeMethod("getPrompts", "List prompts", {page, query})
+    return await this.invokeMethod("getPrompts", "List prompts", { page, query });
   }
 
   async getPromptDetail(promptId) {
-    return await this.invokeMethod("getPromptDetail", "Get prompt detail", promptId)
+    return await this.invokeMethod("getPromptDetail", "Get prompt detail", promptId);
   }
 
   async getDatasourceDetail(id) {
-    return await this.invokeMethod("getDatasourceDetail", "Get prompt detail", id)
+    return await this.invokeMethod("getDatasourceDetail", "Get prompt detail", id);
   }
 
   async getDatasources() {
-    return await this.invokeMethod("getDatasources", "List datasources")
+    return await this.invokeMethod("getDatasources", "List datasources");
   }
 
   async getApplicationDetail(id) {
-    return await this.invokeMethod("getAppllicationDetail", "Get application detail", id)
+    return await this.invokeMethod("getAppllicationDetail", "Get application detail", id);
   }
 
   async getApplications() {
-    return await this.invokeMethod("getApplications", "List applications")
+    return await this.invokeMethod("getApplications", "List applications");
   }
 
   async getDeployments() {
-    return await this.invokeMethod("getDeployments", "Get deployments")
+    return await this.invokeMethod("getDeployments", "Get deployments");
   }
 
   async stopApplicationTask(taskId) {
-    return await this.invokeMethod("stopApplicationTask", "Stop application task", taskId)
+    return await this.invokeMethod("stopApplicationTask", "Stop application task", taskId);
   }
 
   async stopDatasourceTask(taskId) {
-    return await this.invokeMethod("stopDatasourceTask", "Stop datasource task", taskId)
+    return await this.invokeMethod("stopDatasourceTask", "Stop datasource task", taskId);
   }
 
   async chat(params) {
-    return await this.invokeMethod("chat", "Chat", params)
+    return await this.invokeMethod("chat", "Chat", params);
   }
 };

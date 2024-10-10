@@ -91,20 +91,31 @@
       {
         "title": "Main Settings",
         "properties": {
-          "alitacode.providerServerURL": {
+          "alitacode.LLMServerUrl": {
             "order": 1,
             "type": "string",
             "default": "",
-            "description": "URL to LLM service provider if applicable"
+            "description": "URL to LLM service provider"
           },
-          "alitacode.authToken": {
+          "alitacode.LLMAuthToken": {
             "order": 2,
             "type": "string",
-            "default": "",
-            "description": "This is API Key or Bearer token for LLM service provider if applicable"
+            "default": ""
           },
-          "alitacode.modelName": {
+          "alitacode.projectId": {
             "order": 3,
+            "type": "number",
+            "default": 1,
+            "description": "Project Id in Carrier, ignored for OpenAI and AI Dial"
+          },
+          "alitacode.integrationUid": {
+            "order": 4,
+            "type": "string",
+            "default": "Integration UUID goes here",
+            "description": "AI integration Id from Alita Backened, ignored for OpenAI"
+          },
+          "alitacode.LLMModelName": {
+            "order": 5,
             "type": "string",
             "default": "gpt-4",
             "enum": [
@@ -116,24 +127,12 @@
             "description": "Model name used for local prompts, this is deployment name, and it can be different from case to case"
           },
           "alitacode.customModelName": {
-            "order": 4,
+            "order": 6,
             "type": "string",
             "default": "",
             "description": "Custom model name used for local prompts"
           },
-          "alitacode.projectId": {
-            "order": 5,
-            "type": "number",
-            "default": 1,
-            "description": "Project Id in Alita Backened, ignored for OpenAI"
-          },
-          "alitacode.integrationUid": {
-            "order": 6,
-            "type": "string",
-            "default": "Integration UUID goes here",
-            "description": "AI integration Id from Alita Backened, ignored for OpenAI"
-          },
-          "alitacode.defaultViewMode": {
+          "alitacode.displayType": {
             "order": 7,
             "type": "string",
             "default": "append",
@@ -163,11 +162,11 @@
       {
         "title": "Advanced Settings",
         "properties": {
-          "alitacode.customModelTokens": {
+          "alitacode.customModelSize": {
             "order": 1,
             "type": "number",
             "default": 4096,
-            "description": "Custom model max tokens used for local prompts"
+            "description": "Type custom model's tokens size"
           },
           "alitacode.maxTokens": {
             "order": 2,

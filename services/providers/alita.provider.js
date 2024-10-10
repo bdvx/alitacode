@@ -110,7 +110,7 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
                     prompt_data.top_k = template.userSettings.topK
                 }
                 if (template.userSettings.modelName) {
-                    prompt_data.model_name = template.userSettings.modelName
+                    prompt_data.model_name = template.userSettings.LLMModelName
                 }
             }
 
@@ -174,7 +174,7 @@ module.exports = class AlitaServiceProvider extends CarrierServiceProvider {
         }
         display_type = (prompt_template && prompt_template.display_type) ?
             prompt_template.display_type :
-            this.workspaceService.getWorkspaceConfig().DefaultViewMode;
+            this.workspaceService.getWorkspaceConfig().DisplayType;
         // escape $ sign as later it try to read it as template variable
         const resp_data = response.data.response ? response.data.response.replace(/\$/g, "\\$") : response.data.messages.map((message) => message.content.replace(/\$/g, "\\$")).join("\n")
         return {

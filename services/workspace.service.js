@@ -40,9 +40,9 @@ module.exports = class WorkspaceService {
       LLMProvider: workspace
         .getConfiguration(WORKSPACE.EXTENSION.NAME)
         .get(WORKSPACE.EXTENSION.PARAM.LLM_PROVIDER_TYPE, "Alita"),
-      DefaultViewMode: workspace
+      DisplayType: workspace
         .getConfiguration(WORKSPACE.EXTENSION.NAME)
-        .get(WORKSPACE.EXTENSION.PARAM.DEFAULT_VIEW_MODE),
+        .get(WORKSPACE.EXTENSION.PARAM.DISPLAY_TYPE),
       LLMmodelName: workspace
         .getConfiguration(WORKSPACE.EXTENSION.NAME)
         .get(WORKSPACE.EXTENSION.PARAM.CUSTOM_MODEL_NAME) ? 
