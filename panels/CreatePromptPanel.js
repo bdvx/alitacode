@@ -1,4 +1,4 @@
-import {getUri} from "../utilities/getUri";
+import {getUri} from "../utils/getUri";
 import {createPrompt} from "../commands";
 
 const vscode = require("vscode");
@@ -143,6 +143,7 @@ export class CreatePromptPanel {
                 command: 'save',
                 promptSettings
             })
+            console.log('alitacode prompt created!')
             cleanUp()
           }
         </script>
