@@ -19,27 +19,15 @@ module.exports = {
     },
     COMMON: {
       READ_FILE: (filePath, error) =>
-        `Couldn't read file in next path: ${filePath}.\nError: ${JSON.stringify(
-          error,
-          null,
-          2
-        )}`,
+        `Couldn't read file in next path: ${filePath}.\nError: ${JSON.stringify(error, null, 2)}`,
       WRITE_FILE: (filePath, error) =>
-        `Couldn't write content in next path: ${filePath}\nError: ${JSON.stringify(
-          error,
-          null,
-          2
-        )}`,
+        `Couldn't write content in next path: ${filePath}\nError: ${JSON.stringify(error, null, 2)}`,
       SHOULD_HAVE_PROMPT: `Selected prompt doesn't have template, please specify template!`,
       SHOULD_HAVE_ITEMS: "Should have items",
       SHOULD_HAVE_BASE_PATH: "Should have basePath",
       SHOULD_HAVE_AT_LEAST: (len = 1) => `Should have at least ${len} symbols`,
       FILE_NOT_EXISTS: (path, error) =>
-        `File in next path ${path} doesn't exists.\nError: ${JSON.stringify(
-          error,
-          null,
-          2
-        )}\n`,
+        `File in next path ${path} doesn't exists.\nError: ${JSON.stringify(error, null, 2)}\n`,
     },
   },
   WORKSPACE: {
@@ -59,10 +47,10 @@ module.exports = {
         TEMPERATURE: "temperature",
         PROJECTID: "projectId",
         INTEGRATIONID: "integrationUid",
-        CUSTOM_MODEL_NAME: "customModelName",
         DEFAULT_TOKENS: "customModelSize",
         DISPLAY_TYPE: "displayType",
-        VERIFY_SSL: "verifySsl"
+        VERIFY_SSL: "verifySsl",
+        DEBUG: "debug",
       },
     },
   },
@@ -75,6 +63,7 @@ module.exports = {
     PREDICT: "alitacode.predict",
     OPEN_SETTINGS: "workbench.action.openSettings",
     ADD_GOOD_PREDICTION: "alitacode.addGoodPrediction",
+    GET_AVAILABLE_AI_MODELS: "alitacode.getAvailableAIModels",
   },
   TEXT: {
     ALITA_ACTIVATED: "Alita was activated! Please specify configuration",

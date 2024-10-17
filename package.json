@@ -28,10 +28,6 @@
         "title": "Alita: Create Prompt"
       },
       {
-        "command": "alitacode.createPromptModal",
-        "title": "Alita: Create Prompt (Modal Window mode)"
-      },
-      {
         "command": "alitacode.addContext",
         "title": "Alita: Extend Context"
       },
@@ -42,6 +38,10 @@
       {
         "command": "alitacode.initAlita",
         "title": "Alita: Init"
+      },
+      {
+        "command": "alitacode.getAvailableAIModels",
+        "title": "Alita: Get available AI models from the server"
       }
     ],
     "menus": {
@@ -108,32 +108,8 @@
             "default": 1,
             "description": "Project Id in Carrier, ignored for OpenAI and AI Dial"
           },
-          "alitacode.integrationUid": {
-            "order": 4,
-            "type": "string",
-            "default": "Integration UUID goes here",
-            "description": "AI integration Id from Alita Backened, ignored for OpenAI"
-          },
-          "alitacode.LLMModelName": {
-            "order": 5,
-            "type": "string",
-            "default": "gpt-4",
-            "enum": [
-              "gpt-35-turbo",
-              "gpt-35-turbo-16k",
-              "gpt-4",
-              "gpt-4-0125-preview"
-            ],
-            "description": "Model name used for local prompts, this is deployment name, and it can be different from case to case"
-          },
-          "alitacode.customModelName": {
-            "order": 6,
-            "type": "string",
-            "default": "",
-            "description": "Custom model name used for local prompts"
-          },
           "alitacode.displayType": {
-            "order": 7,
+            "order": 4,
             "type": "string",
             "default": "append",
             "enum": [
@@ -145,17 +121,53 @@
             "description": "Select the default display mode for the predictions"
           },
           "alitacode.verifySsl": {
-            "order": 8,
+            "order": 5,
             "label": "Verify SSL",
             "type": "boolean",
             "default": true,
             "description": "Verify LLM service provider certificate"
           },
           "alitacode.enable": {
-            "order": 9,
+            "order": 6,
             "type": "boolean",
             "default": true,
             "description": "Enable/disable this extension"
+          },
+          "alitacode.debug": {
+            "order": 10,
+            "type": "boolean",
+            "default": false,
+            "description": "Enable/disable debug mode"
+          }
+        }
+      },
+      {
+        "title": "Integration Settings",
+        "properties": {
+          "alitacode.selectIntegration": {
+            "order": 1,
+            "type": "string",
+            "default": "Please use [Click here to select] button",
+            "enum": [
+              "Please use [Click here to select] button"
+            ],
+            "markdownDescription": "[Click here to select](command:alitacode.getAvailableAIModels)"
+          },
+          "alitacode.LLMModelName": {
+            "order": 2,
+            "type": "string",
+            "default": "",
+            "markdownDescription": "Model name used for local prompts, this is deployment name, and it can be different from case to case"
+          },
+          "alitacode.integrationName": {
+            "order": 3,
+            "type": "string"
+          },
+          "alitacode.integrationUid": {
+            "order": 4,
+            "type": "string",
+            "default": "Integration UUID goes here",
+            "description": "AI integration Id from Alita Backened, ignored for OpenAI"
           }
         }
       },
@@ -210,19 +222,17 @@
   },
   "scripts": {
     "lint": "prettier --write . && eslint .",
-    "compile": "node ./esbuild.js",
     "pretest": "npm run lint",
     "test": "node ./test/runTest.js",
     "esbuild-base": "esbuild ./extension.js --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
     "esbuild": "npm run esbuild-base -- --sourcemap",
     "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-    "prevsce": "npm run compile -- --minify",
+    "prevsce": "npm run esbuild-base -- --minify",
     "vsce": "vsce package",
     "publish": "vsce publish"
   },
   "dependencies": {
     "@azure/openai": "^1.0.0-beta.12",
-    "@vscode/webview-ui-toolkit": "^1.4.0",
     "axios": "^1.6.8",
     "form-data": "^4.0.0",
     "squirrelly": "7.9.2",
@@ -235,12 +245,12 @@
     "@types/vscode": "^1.78.0",
     "@vscode/test-electron": "^2.3.2",
     "@vscode/vsce": "^2.25.0",
-    "esbuild": "^0.19.5",
+    "esbuild": "^0.18.11",
     "eslint": "^8.41.0",
     "eslint-config-prettier": "^8.8.0",
     "glob": "^8.1.0",
     "mocha": "^10.2.0",
     "prettier": "^2.8.8",
-    "typescript": "^4.1.6"
+    "typescript": "^5.1.3"
   }
 }

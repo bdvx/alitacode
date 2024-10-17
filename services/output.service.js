@@ -14,6 +14,20 @@
 
 const vscode = require("vscode");
 
+function maskAuthorizationHeader(headers) {
+  const maskedHeaders = { ...headers };
+
+  if (maskedHeaders.Authorization) {
+    const token = maskedHeaders.Authorization.split(" ")[1];
+    const tokenLength = token.length;
+    const maskedToken = "*".repeat(tokenLength - 4) + token.slice(-4);
+
+    maskedHeaders.Authorization = `Bearer ${maskedToken}`;
+  }
+
+  return maskedHeaders;
+}
+
 module.exports = class OutputService {
   static activate() {
     if (this._outputChannel) return;
@@ -31,6 +45,11 @@ module.exports = class OutputService {
     this._outputChannel.appendLine(`\n--- Request ---`);
     this._outputChannel.appendLine(`Method: ${config.method.toUpperCase()}`);
     this._outputChannel.appendLine(`URL: ${config.url}`);
+    this._outputChannel.appendLine(`Headers: ${JSON.stringify(maskAuthorizationHeader(config.headers), null, 2)}`);
+
+    if (config.data) {
+      this._outputChannel.appendLine(`Data: ${JSON.stringify(config.data, null, 2)}`);
+    }
   }
 
   static logResponse(response) {
@@ -38,7 +57,10 @@ module.exports = class OutputService {
     this._outputChannel.appendLine(`Status: ${response.status}`);
     this._outputChannel.appendLine(`Status Text: ${response.statusText}`);
     this._outputChannel.appendLine(`Headers: ${JSON.stringify(response.headers, null, 2)}`);
-    this._outputChannel.appendLine(`Data: ${JSON.stringify(response.data, null, 2)}`);
+
+    if (response.data) {
+      this._outputChannel.appendLine(`Data: ${JSON.stringify(response.data, null, 2)}`);
+    }
   }
 
   static logResponseError(error) {
