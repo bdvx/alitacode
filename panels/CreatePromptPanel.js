@@ -72,23 +72,27 @@ export class CreatePromptPanel {
            const basicElementsArray = [
               "promptName", "promptDescription", "context"
             ]
-            const integrationElementsArray = [
-              "temperature",
-              "LLMModelName",
-              "maxTokens",
-              "topP",
-              "topK"
-            ]
+            const integrationElementsArray = Object.create({})
+            integrationElementsArray["temperature"] = 0.8,
+            integrationElementsArray["LLMModelName"] = "gpt-4" ,
+            integrationElementsArray["maxTokens"] = 1024,
+            integrationElementsArray["topP"] = 40,
+            integrationElementsArray["topK"] = 0.8
+            
           function useProjectIntegrationFields(state) {
-             console.log({state})
+            const elements = Object.keys(integrationElementsArray)
             if(!state.checked){
-              integrationElementsArray.forEach(
-               (element) => document.getElementsByName(element)[0].removeAttribute("disabled"))
+              elements.forEach(
+               (element) => {
+                 document.getElementsByName(element)[0].removeAttribute("disabled");
+                 document.getElementsByName(element)[0].value = integrationElementsArray[element];
+               })
             } else {
-              integrationElementsArray.forEach(
+              elements.forEach(
                (element) => document.getElementsByName(element)[0].setAttribute("disabled", "true"))
             }
           }
+          
           function addVariable() {
              const dataGrid = document.getElementById("variables")
              const varName = document.getElementById("varName").value
@@ -102,17 +106,28 @@ export class CreatePromptPanel {
               ];
             }
           }
+          
+          function cleanUp(){
+             basicElementsArray.forEach(
+                (element) => { document.getElementsByName(element)[0].value = '' })
+             Object.keys(integrationElementsArray).forEach(
+                (element) => { document.getElementsByName(element)[0].value = '' })
+             document.getElementById('variables').rowsData = []
+             document.getElementById("varName").value = ''
+             document.getElementById("varVal").value = ''
+             document.getElementById('useProjectIntegration').checked = false
+          }
+          
           function savePrompt() {
             const promptSettings = Object.create({})
             basicElementsArray.forEach(
                 (element) => { promptSettings[element] = document.getElementsByName(element)[0].value })
-            const normalizedPromptName = promptSettings.promptName.replace(/[^\\w\\d]/g, "_");
-            promptSettings.newPromptFileName = normalizedPromptName + ".yaml";
             if(document.getElementById('useProjectIntegration').checked){
               promptSettings.integration_settings = Object.create({})
-              integrationElementsArray.forEach(
+              Object.keys(integrationElementsArray).forEach(
                   (element) => { 
-                    promptSettings.integration_settings[element] = document.getElementsByName(element)[0].value 
+                    const val = document.getElementsByName(element)[0].value;
+                    promptSettings.integration_settings[element] = element === 'LLMModelName' ? val: +val
                   })
               }
             const dataGrid = document.getElementById("variables")
@@ -120,13 +135,15 @@ export class CreatePromptPanel {
               promptSettings.variables = Object.create({})
               dataGrid.rowsData.forEach(
                   (element) => { 
-                    promptSettings.variables[element.name] = element.value 
+                    const regex = new RegExp('^\\\\d+$');
+                    promptSettings.variables[element.name] = regex.test(element.value) ? +element.value : element.value
                   })
             }
             vscode.postMessage({
                 command: 'save',
                 promptSettings
             })
+            cleanUp()
           }
         </script>
         <script type="module" src="${webviewUri}"></script>
@@ -141,7 +158,7 @@ export class CreatePromptPanel {
           <br />
           <vscode-text-field id="varName">Name</vscode-text-field>
           <vscode-text-field id="varVal">Value</vscode-text-field>
-          <vscode-button appearance="secondary" name="add-var" onclick="addVariable()">Add</vscode-button>
+          <vscode-button style="position: relative;top: -12px;" appearance="secondary" name="add-var" onclick="addVariable()">Add</vscode-button>
           <vscode-data-grid id="variables" aria-label="Basic"></vscode-data-grid>
         </label>
         <br />

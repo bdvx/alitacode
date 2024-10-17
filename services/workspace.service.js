@@ -110,6 +110,7 @@ module.exports = class WorkspaceService {
       if (isJson || ext == "json"){
         content = JSON.stringify(content, null, 2)
       } else if (["yaml","yml"].includes(ext)) {
+        console.log({content})
         content = stringify(content)
       } 
     }
