@@ -64,7 +64,7 @@ module.exports = class OutputService {
     this._outputChannel.appendLine(`Headers: ${JSON.stringify(response.headers, null, 2)}`);
 
     if (response.data) {
-    this._outputChannel.appendLine(`Data: ${JSON.stringify(response.data, null, 2)}`);
+      this._outputChannel.appendLine(`Data: ${JSON.stringify(response.data, null, 2)}`);
     }
   }
 
