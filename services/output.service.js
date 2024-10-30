@@ -20,7 +20,12 @@ function maskAuthorizationHeader(headers) {
   if (maskedHeaders.Authorization) {
     const token = maskedHeaders.Authorization.split(" ")[1];
     const tokenLength = token.length;
-    const maskedToken = "*".repeat(tokenLength - 4) + token.slice(-4);
+    let maskedToken;
+    if (tokenLength > 4) {
+      maskedToken = "*".repeat(tokenLength - 4) + token.slice(-4);
+    } else {
+      maskedToken = token;
+    }
 
     maskedHeaders.Authorization = `Bearer ${maskedToken}`;
   }
