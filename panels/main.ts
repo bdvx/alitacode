@@ -11,9 +11,11 @@ function main() {
       name: "",
       value: ""
     }
-  ];*/
+  ];
   dataGrid.columnDefinitions = [
     { columnDataKey: "name", title: "Name" },
-    { columnDataKey: "value", title: "Value" }
+    { columnDataKey: "value", title: "Value" },
+    { columnDataKey: "delete", title: "" }
   ];
+  */
 }
