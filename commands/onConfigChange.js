@@ -18,9 +18,29 @@ const vscode = require("vscode");
 const { LOCAL_PROMPTS_BLOCKERS } = require("../constants/index");
 const https = require("https");
 
+function parseJwt(token) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+
+  return JSON.parse(jsonPayload);
+}
+
+function verifyToken(parsedToken) {
+  let currentDate = new Date().getTime();
+  let parsedDate = new Date(parsedToken.expires).getTime();
+  if (currentDate > parsedDate) {
+    console.log(`Alita Code: LLMAuth Token expired, please provide new one`);
+    vscode.window.showInformationMessage('Alita Code: LLMAuth Token expired, please provide new one');
+  }
+}
+
 module.exports = async function () {
     const { workspaceService, alitaService } = require("../services");
-    const { promptLib, workspacePath, LLMProvider, verifySsl} = workspaceService.getWorkspaceConfig();
+    const { promptLib, workspacePath, LLMProvider, verifySsl, LLMauthToken} = workspaceService.getWorkspaceConfig();
+    verifyToken(parseJwt(LLMauthToken));
     https.globalAgent.options.rejectUnauthorized = verifySsl;
     await vscode.commands.executeCommand("setContext", "alitacode.LLMProvider", LLMProvider);
     await vscode.commands.executeCommand("setContext", 
