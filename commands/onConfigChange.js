@@ -29,12 +29,15 @@ function parseJwt(token) {
 }
 
 function verifyToken(parsedToken) {
+  if(/(^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$)/.test(parsedToken)) {
     let currentDate = new Date().getTime();
     let parsedDate = new Date(parsedToken.expires).getTime();
     if (currentDate > parsedDate) {
-      console.log(`Alita Code: LLMAuth Token expired, please provide new one`);
-      vscode.window.showInformationMessage('Alita Code: LLMAuth Token expired, please provide new one');
+      const message = 'Alita Code: LLMAuth Token expired'
+      console.error(message);
+      vscode.window.showInformationMessage(message);
     }
+  }
 }
 
 module.exports = async function () {
