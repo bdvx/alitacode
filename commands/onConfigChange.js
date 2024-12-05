@@ -19,24 +19,34 @@ const { LOCAL_PROMPTS_BLOCKERS } = require("../constants/index");
 const https = require("https");
 
 function parseJwt(token) {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
+  try {
+    if (token && /(^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$)/.test(
+        token)) {
+      var base64Url = token.split('.')[1];
+      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var jsonPayload = decodeURIComponent(
+          atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          }).join(''));
 
-    return JSON.parse(jsonPayload);
+      return JSON.parse(jsonPayload);
+    } else throw Error("Alita Code: Invalid LLMAuth JWT token")
+  } catch(e) {
+    const message = "Alita Code: Invalid LLMAuth JWT token"
+    vscode.window.showErrorMessage(message);
+    return null;
+  }
 }
 
 function verifyToken(parsedToken) {
-  if(/(^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$)/.test(parsedToken)) {
-    if (!parsedToken.expires) return;
+  if(parsedToken) {
+    if (parsedToken.expires === undefined) return;
     if (parsedToken.expires === 'null' || parsedToken.expires === null) {
       vscode.window.showInformationMessage('Alita Code: LLMAuth Token is valid');
     }
-    let currentDate = new Date().getTime();
-    let parsedDate = new Date(parsedToken.expires).getTime();
-    if (currentDate > parsedDate) {
+    let currentDate = new Date();
+    let parsedDate = new Date(parsedToken.expires);
+    if (currentDate.getTime() > parsedDate.getTime()) {
       const message = 'Alita Code: LLMAuth Token expired'
       console.error(message);
       vscode.window.showErrorMessage(message);
@@ -51,6 +61,7 @@ function verifyToken(parsedToken) {
 module.exports = async function () {
     const { workspaceService, alitaService } = require("../services");
     const { promptLib, workspacePath, LLMProvider, verifySsl, LLMauthToken} = workspaceService.getWorkspaceConfig();
+    
     verifyToken(parseJwt(LLMauthToken));
     https.globalAgent.options.rejectUnauthorized = verifySsl;
     await vscode.commands.executeCommand("setContext", "alitacode.LLMProvider", LLMProvider);
