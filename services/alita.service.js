@@ -123,15 +123,15 @@ module.exports = class AlitaService {
   }
 
   async getEmbeddings() {
-    return await this.invokeMethod("getEmbeddings", "Get available integrations")
+    return await this.invokeMethod("getEmbeddings", "Get available integrations");
   }
 
   async getAIModelNames() {
     this.integrationData = await this.getEmbeddings();
     const array = [];
-    this.integrationData.forEach(entry => {
+    this.integrationData.forEach((entry) => {
       if (entry.settings && Array.isArray(entry.settings.models)) {
-        entry.settings.models.forEach(model => {
+        entry.settings.models.forEach((model) => {
           if (model.name && entry.name) {
             array.push({ [entry.config.name]: model.name });
           }
@@ -144,27 +144,27 @@ module.exports = class AlitaService {
   async getAIModelUid(integrationConfigName, isUsedCashedData) {
     const data = isUsedCashedData ? this.integrationData : await this.getEmbeddings();
     return data
-      .filter(integration => integration.config.name === integrationConfigName)
-      .map(integration => integration.uid);
+      .filter((integration) => integration.config.name === integrationConfigName)
+      .map((integration) => integration.uid);
   }
 
   async getAIModelIntegrationName(integrationConfigName, isUsedCashedData) {
     const data = isUsedCashedData ? this.integrationData : await this.getEmbeddings();
     return data
-      .filter(integration => integration.config.name === integrationConfigName)
-      .map(integration => integration.name);
+      .filter((integration) => integration.config.name === integrationConfigName)
+      .map((integration) => integration.name);
   }
 
   async getEmbeddings() {
-    return await this.invokeMethod("getEmbeddings", "Get available integrations")
+    return await this.invokeMethod("getEmbeddings", "Get available integrations");
   }
 
   async getAIModelNames() {
     const data = await this.getEmbeddings();
     const array = [];
-    data.forEach(entry => {
+    data.forEach((entry) => {
       if (entry.settings && Array.isArray(entry.settings.models)) {
-        entry.settings.models.forEach(model => {
+        entry.settings.models.forEach((model) => {
           if (model.name && entry.name) {
             array.push({ [entry.config.name]: model.name });
           }
@@ -177,14 +177,14 @@ module.exports = class AlitaService {
   async getAIModelUid(integrationConfigName) {
     const data = await this.getEmbeddings();
     return data
-      .filter(integration => integration.config.name === integrationConfigName)
-      .map(integration => integration.uid);
+      .filter((integration) => integration.config.name === integrationConfigName)
+      .map((integration) => integration.uid);
   }
 
   async getAIModelIntegrationName(integrationConfigName) {
     const data = await this.getEmbeddings();
     return data
-      .filter(integration => integration.config.name === integrationConfigName)
-      .map(integration => integration.name);
+      .filter((integration) => integration.config.name === integrationConfigName)
+      .map((integration) => integration.name);
   }
 };

@@ -17,13 +17,14 @@ const { alitaService, workspaceService } = require("../services");
 
 module.exports = async function () {
   try {
-    alitaService.checkLLMConfig()
-    await alitaService.serviceProvider.clearEmbeddings()
-    await alitaService.serviceProvider.syncEmbeddings()
+    alitaService.checkLLMConfig();
+    await alitaService.serviceProvider.clearEmbeddings();
+    await alitaService.serviceProvider.syncEmbeddings();
     alitaService.init_done = 1;
-    await workspaceService.updateEmbeddings()
+    await workspaceService.updateEmbeddings();
   } catch (e) {
     await vscode.window.showErrorMessage(
-      `Alita is not able to connec to ${alitaService.serviceProvider.getEmbeddingsUrl}`);
+      `Alita is not able to connec to ${alitaService.serviceProvider.getEmbeddingsUrl}`
+    );
   }
-}
+};
