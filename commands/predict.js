@@ -31,15 +31,16 @@ module.exports = async function () {
   
   const promptsList = await workspaceService.updatePrompts();
   // renderring list
-  const entities = [...promptsList].map(prompt =>
-  ({
-    label: prompt.label.replace(/(_prompt|_datasource)$/, ""),
-    description: prompt.description,
-    iconPath: new vscode.ThemeIcon(prompt.label.endsWith("_datasource")
-      ? "database"
-      : (prompt.external ? "terminal" : "remote-explorer")),
-    full_name: prompt.label
-  }));
+  const entities = [...promptsList]
+    .filter((it) => !it.external)
+    .map((prompt) => ({
+      label: prompt.label.replace(/(_prompt|_datasource)$/, ""),
+      description: prompt.description,
+      iconPath: new vscode.ThemeIcon(
+        prompt.label.endsWith("_datasource") ? "database" : prompt.external ? "terminal" : "remote-explorer"
+      ),
+      full_name: prompt.label,
+    }));
   let selection = await windowService.showQuickPick([...entities]);
   selection = [...promptsList].find(prompt => prompt.label === selection.full_name)
   if (!selection) return;
