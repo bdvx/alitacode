@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 const { alitaService } = require("../services");
 const vscode = require("vscode");
 
@@ -22,15 +21,19 @@ module.exports = async function () {
   if (selectedModel) {
     const configuration = vscode.workspace.getConfiguration();
     const { label: modelName, description: groupName } = selectedModel;
-    await configuration.update("alitacode.LLMModelName",
-      modelName, vscode.ConfigurationTarget.Workspace);
-    await configuration.update("alitacode.LLMModelName",
-      modelName, vscode.ConfigurationTarget.Global);
+    await configuration.update("alitacode.LLMModelName", modelName, vscode.ConfigurationTarget.Workspace);
+    await configuration.update("alitacode.LLMModelName", modelName, vscode.ConfigurationTarget.Global);
     const integrationName = await alitaService.getAIModelIntegrationName(groupName, true);
-    await configuration.update("alitacode.integrationName",
-      integrationName.toString(), vscode.ConfigurationTarget.Workspace);
-    await configuration.update("alitacode.integrationName",
-      integrationName.toString(), vscode.ConfigurationTarget.Global);
+    await configuration.update(
+      "alitacode.integrationName",
+      integrationName.toString(),
+      vscode.ConfigurationTarget.Workspace
+    );
+    await configuration.update(
+      "alitacode.integrationName",
+      integrationName.toString(),
+      vscode.ConfigurationTarget.Global
+    );
     const uid = await alitaService.getAIModelUid(groupName, true);
     await configuration.update("alitacode.integrationUid", uid.toString(), vscode.ConfigurationTarget.Workspace);
     await configuration.update("alitacode.integrationUid", uid.toString(), vscode.ConfigurationTarget.Global);
@@ -41,11 +44,11 @@ module.exports = async function () {
 };
 
 function createAIProvidersOptions(providerItems) {
-  return providerItems.map(item => {
+  return providerItems.map((item) => {
     const key = Object.keys(item)[0];
     const value = item[key];
-    return { label: value, description: key }
-  })
+    return { label: value, description: key };
+  });
 }
 
 function showInputBox(options, placeHolder) {

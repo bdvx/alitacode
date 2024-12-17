@@ -16,7 +16,7 @@ const { workspace, Uri, window } = require("vscode");
 const vscode = require("vscode");
 const path = require("path");
 const { WORKSPACE, TEXT, BUTTON, COMMAND, ERROR, MESSAGE } = require("../constants");
-const {parse, stringify} = require("yaml")
+const { parse, stringify } = require("yaml");
 
 module.exports = class WorkspaceService {
   constructor() {
@@ -27,67 +27,43 @@ module.exports = class WorkspaceService {
   getWorkspaceConfig() {
     const folders = vscode.workspace.workspaceFolders;
     return {
-      enable: workspace
-        .getConfiguration(WORKSPACE.EXTENSION.NAME)
-        .get(WORKSPACE.EXTENSION.PARAM.ENABLE),
+      enable: workspace.getConfiguration(WORKSPACE.EXTENSION.NAME).get(WORKSPACE.EXTENSION.PARAM.ENABLE),
       promptLib: ".promptLib",
-      LLMserverURL: workspace
-        .getConfiguration(WORKSPACE.EXTENSION.NAME)
-        .get(WORKSPACE.EXTENSION.PARAM.LLM_SERVER_URL),
-      LLMauthToken: workspace
-        .getConfiguration(WORKSPACE.EXTENSION.NAME)
-        .get(WORKSPACE.EXTENSION.PARAM.LLM_TOKEN),
+      LLMserverURL: workspace.getConfiguration(WORKSPACE.EXTENSION.NAME).get(WORKSPACE.EXTENSION.PARAM.LLM_SERVER_URL),
+      LLMauthToken: workspace.getConfiguration(WORKSPACE.EXTENSION.NAME).get(WORKSPACE.EXTENSION.PARAM.LLM_TOKEN),
       LLMProvider: workspace
         .getConfiguration(WORKSPACE.EXTENSION.NAME)
         .get(WORKSPACE.EXTENSION.PARAM.LLM_PROVIDER_TYPE, "Alita"),
-      DisplayType: workspace
-        .getConfiguration(WORKSPACE.EXTENSION.NAME)
-        .get(WORKSPACE.EXTENSION.PARAM.DISPLAY_TYPE),
-      LLMmodelName: workspace
-        .getConfiguration(WORKSPACE.EXTENSION.NAME)
-        .get(WORKSPACE.EXTENSION.PARAM.LLM_MODEL_NAME),
+      DisplayType: workspace.getConfiguration(WORKSPACE.EXTENSION.NAME).get(WORKSPACE.EXTENSION.PARAM.DISPLAY_TYPE),
+      LLMmodelName: workspace.getConfiguration(WORKSPACE.EXTENSION.NAME).get(WORKSPACE.EXTENSION.PARAM.LLM_MODEL_NAME),
       DEFAULT_TOKENS: workspace
         .getConfiguration(WORKSPACE.EXTENSION.NAME)
         .get(WORKSPACE.EXTENSION.PARAM.DEFAULT_TOKENS),
       LLMApiVersion: workspace
         .getConfiguration(WORKSPACE.EXTENSION.NAME)
         .get(WORKSPACE.EXTENSION.PARAM.LLM_API_VERSION, "2023-12-01-preview"),
-      topP: workspace
-        .getConfiguration(WORKSPACE.EXTENSION.NAME)
-        .get(WORKSPACE.EXTENSION.PARAM.TOP_P),
-      topK: workspace
-        .getConfiguration(WORKSPACE.EXTENSION.NAME)
-        .get(WORKSPACE.EXTENSION.PARAM.TOP_K),
-      maxTokens: workspace
-        .getConfiguration(WORKSPACE.EXTENSION.NAME)
-        .get(WORKSPACE.EXTENSION.PARAM.MAX_TOKENS),
-      temperature: workspace
-        .getConfiguration(WORKSPACE.EXTENSION.NAME)
-        .get(WORKSPACE.EXTENSION.PARAM.TEMPERATURE),
-      projectID: workspace
-        .getConfiguration(WORKSPACE.EXTENSION.NAME)
-        .get(WORKSPACE.EXTENSION.PARAM.PROJECTID),
-      integrationID: workspace
-        .getConfiguration(WORKSPACE.EXTENSION.NAME)
-        .get(WORKSPACE.EXTENSION.PARAM.INTEGRATIONID),
-      verifySsl: workspace
-        .getConfiguration(WORKSPACE.EXTENSION.NAME)
-        .get(WORKSPACE.EXTENSION.PARAM.VERIFY_SSL),
+      topP: workspace.getConfiguration(WORKSPACE.EXTENSION.NAME).get(WORKSPACE.EXTENSION.PARAM.TOP_P),
+      topK: workspace.getConfiguration(WORKSPACE.EXTENSION.NAME).get(WORKSPACE.EXTENSION.PARAM.TOP_K),
+      maxTokens: workspace.getConfiguration(WORKSPACE.EXTENSION.NAME).get(WORKSPACE.EXTENSION.PARAM.MAX_TOKENS),
+      temperature: workspace.getConfiguration(WORKSPACE.EXTENSION.NAME).get(WORKSPACE.EXTENSION.PARAM.TEMPERATURE),
+      projectID: workspace.getConfiguration(WORKSPACE.EXTENSION.NAME).get(WORKSPACE.EXTENSION.PARAM.PROJECTID),
+      integrationID: workspace.getConfiguration(WORKSPACE.EXTENSION.NAME).get(WORKSPACE.EXTENSION.PARAM.INTEGRATIONID),
+      verifySsl: workspace.getConfiguration(WORKSPACE.EXTENSION.NAME).get(WORKSPACE.EXTENSION.PARAM.VERIFY_SSL),
       workspacePath: folders && folders.length > 0 ? folders[0].uri.fsPath : null,
     };
   }
 
-  async readContent(filePath, isJson=false) {
+  async readContent(filePath, isJson = false) {
     try {
       const content = await workspace.fs.readFile(Uri.file(filePath));
       const ext = filePath.split(".").pop();
       try {
-        if (isJson || ext == "json"){
-          return JSON.parse(content)
-        } else if (["yaml","yml"].includes(ext)) {
-          return parse(Buffer.from(content).toString())
+        if (isJson || ext == "json") {
+          return JSON.parse(content);
+        } else if (["yaml", "yml"].includes(ext)) {
+          return parse(Buffer.from(content).toString());
         } else {
-          return Buffer.from(content).toString();  
+          return Buffer.from(content).toString();
         }
       } catch (ex) {
         return Buffer.from(content).toString();
@@ -95,23 +71,20 @@ module.exports = class WorkspaceService {
     } catch (error) {
       await window.showErrorMessage(ERROR.COMMON.READ_FILE(filePath, error));
       throw new Error(ERROR.COMMON.READ_FILE(filePath, error));
-    } 
+    }
   }
 
-  async writeContent(filePath, content, isJson=false) {
+  async writeContent(filePath, content, isJson = false) {
     const ext = filePath.split(".").pop();
-    if (typeof(content) == "object") {
-      if (isJson || ext == "json"){
-        content = JSON.stringify(content, null, 2)
-      } else if (["yaml","yml"].includes(ext)) {
-        content = stringify(content)
-      } 
+    if (typeof content == "object") {
+      if (isJson || ext == "json") {
+        content = JSON.stringify(content, null, 2);
+      } else if (["yaml", "yml"].includes(ext)) {
+        content = stringify(content);
+      }
     }
     try {
-      await workspace.fs.writeFile(
-        Uri.file(filePath),
-        new Uint8Array(Buffer.from(content))
-      );
+      await workspace.fs.writeFile(Uri.file(filePath), new Uint8Array(Buffer.from(content)));
     } catch (error) {
       await window.showErrorMessage(ERROR.COMMON.WRITE_FILE(filePath, error));
       throw new Error(ERROR.COMMON.WRITE_FILE(filePath, error));
@@ -130,14 +103,14 @@ module.exports = class WorkspaceService {
     }
     const pathToFile = path.join(basePath, template);
     var templateContent = await this.readContent(pathToFile);
-    if  (typeof(templateContent) == "object") {
+    if (typeof templateContent == "object") {
       switch (templateKey) {
         case "context":
           templateContent[templateKey] = templateContent[templateKey] + "\n" + selText;
           break;
         case "examples":
           if (templateContent[templateKey] == undefined) {
-            templateContent[templateKey] = []
+            templateContent[templateKey] = [];
           }
           templateContent[templateKey].push(selText);
           break;
@@ -146,9 +119,7 @@ module.exports = class WorkspaceService {
       templateContent = templateContent + "\n" + selText;
     }
     await this.writeContent(pathToFile, templateContent);
-    await vscode.window.showInformationMessage(
-      MESSAGE.CONTEXT_WAS_ADDED(label)
-    );
+    await vscode.window.showInformationMessage(MESSAGE.CONTEXT_WAS_ADDED(label));
   }
 
   async checkThatFileExists(pathToFile) {
@@ -191,20 +162,14 @@ module.exports = class WorkspaceService {
   }
 
   async showSettings() {
-    const choice = await vscode.window.showInformationMessage(
-      TEXT.ALITA_ACTIVATED,
-      BUTTON.SETTINGS
-    );
+    const choice = await vscode.window.showInformationMessage(TEXT.ALITA_ACTIVATED, BUTTON.SETTINGS);
     if (!choice) return;
-    return await vscode.commands.executeCommand(
-      COMMAND.OPEN_SETTINGS,
-      WORKSPACE.EXTENSION.NAME
-    );
+    return await vscode.commands.executeCommand(COMMAND.OPEN_SETTINGS, WORKSPACE.EXTENSION.NAME);
   }
 
   async updateEmbeddings() {
     const workspaceConfig = this.getWorkspaceConfig();
-    let embeddings
+    let embeddings;
     try {
       embeddings = await this.readContent(
         path.join(workspaceConfig.workspacePath, workspaceConfig.promptLib, "./embeddings.json"),
@@ -221,7 +186,7 @@ module.exports = class WorkspaceService {
           description: embeddings[embedding].description,
           extension: embeddings[embedding].extension,
           top_k: embeddings[embedding].top_k,
-          cutoff: embeddings[embedding].cutoff
+          cutoff: embeddings[embedding].cutoff,
         });
       }
     }

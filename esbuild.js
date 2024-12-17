@@ -21,7 +21,7 @@ const createPromptConfig = {
   target: "es2020",
   format: "esm",
   entryPoints: ["./panels/main.ts"],
-  outfile: "./out/webview.js"
+  outfile: "./out/webview.js",
 };
 
 const watchConfig = {
@@ -30,9 +30,9 @@ const watchConfig = {
       console.log("[watch] build started");
       if (error) {
         error.errors.forEach((error) =>
-            console.error(
-                `> ${error.location.file}:${error.location.line}:${error.location.column}: error: ${error.text}`
-            )
+          console.error(
+            `> ${error.location.file}:${error.location.line}:${error.location.column}: error: ${error.text}`
+          )
         );
       } else {
         console.log("[watch] build finished");
@@ -63,7 +63,7 @@ const watchConfig = {
       console.log("build complete");
     }
   } catch (err) {
-    console.log({err});
+    console.log({ err });
     //process.stderr.write(err.stderr);
     process.exit(1);
   }

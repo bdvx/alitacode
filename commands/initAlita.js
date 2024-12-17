@@ -19,15 +19,14 @@ const { workspaceService } = require("../services");
 const onConfigChange = require("./onConfigChange");
 const defaultPrompts = require("../constants/defaultPrompts");
 
-
 module.exports = async function () {
   const { promptLib, workspacePath } = workspaceService.getWorkspaceConfig();
-  if (!fs.existsSync(path.join(workspacePath, promptLib))){
-      fs.mkdirSync(path.join(workspacePath, promptLib));
+  if (!fs.existsSync(path.join(workspacePath, promptLib))) {
+    fs.mkdirSync(path.join(workspacePath, promptLib));
   }
-  if (!fs.existsSync(path.join(workspacePath, promptLib, "./prompts.json"))){
-    var prompts = {}
-    for (const promptKey of Object.keys(defaultPrompts)){
+  if (!fs.existsSync(path.join(workspacePath, promptLib, "./prompts.json"))) {
+    var prompts = {};
+    for (const promptKey of Object.keys(defaultPrompts)) {
       const promptName = promptKey.replace(/_/g, " ") + "_prompt";
       const promptDescription = defaultPrompts[promptKey].description;
       delete defaultPrompts[promptKey].description;
@@ -38,7 +37,7 @@ module.exports = async function () {
       prompts[promptName] = {
         description: promptDescription,
         template: `${promptKey}.yaml`,
-        external: false
+        external: false,
       };
     }
     fs.writeFileSync(path.join(workspacePath, promptLib, "./prompts.json"), JSON.stringify(prompts, null, 2));

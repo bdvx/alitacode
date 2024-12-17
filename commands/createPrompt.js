@@ -13,13 +13,13 @@
 // limitations under the License.
 
 const path = require("path");
-const {
-  workspaceService,
-  windowService,
-} = require("../services");
+const { workspaceService, windowService } = require("../services");
 const { TEXT } = require("../constants");
 
-module.exports = async function (items, {promptName= "", promptDescription= "", context="", variables, integration_settings}) {
+module.exports = async function (
+  items,
+  { promptName = "", promptDescription = "", context = "", variables, integration_settings }
+) {
   const { promptLib, workspacePath } = workspaceService.getWorkspaceConfig();
   /*const promptName = await windowService.showInputBox({
     title: TEXT.ENTER_PROMPT_NAME,
@@ -35,31 +35,24 @@ module.exports = async function (items, {promptName= "", promptDescription= "", 
   const normalizedPromptName = promptName.replace(/[^\w\d]/g, "_");
   const newPromptFileName = `${normalizedPromptName}.yaml`;
 
-  const promptContent= {context}
-  if(variables){
-    promptContent.variables = variables
+  const promptContent = { context };
+  if (variables) {
+    promptContent.variables = variables;
   }
-  if(integration_settings){
-    promptContent.integration_settings = integration_settings
+  if (integration_settings) {
+    promptContent.integration_settings = integration_settings;
   }
-  await workspaceService.writeContent(
-      path.join(workspacePath, promptLib, newPromptFileName),
-      promptContent
-  );
+  await workspaceService.writeContent(path.join(workspacePath, promptLib, newPromptFileName), promptContent);
   const promptsMapping = await workspaceService.readContent(
-      path.join(workspacePath, promptLib, "./prompts.json"),
-      true
+    path.join(workspacePath, promptLib, "./prompts.json"),
+    true
   );
   promptsMapping[promptName] = {
     description: promptDescription,
     template: newPromptFileName,
-    external: false
+    external: false,
   };
-  await workspaceService.writeContent(
-      path.join(workspacePath, promptLib, "./prompts.json"),
-      promptsMapping,
-      true
-  );
+  await workspaceService.writeContent(path.join(workspacePath, promptLib, "./prompts.json"), promptsMapping, true);
 
   items.add({ label: promptName, description: promptDescription, template: newPromptFileName });
   // await alitaService.uploadPrompts(
