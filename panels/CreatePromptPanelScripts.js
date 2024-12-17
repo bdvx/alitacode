@@ -19,27 +19,6 @@ function useProjectIntegrationFields(state) {
   }
 }
 
-/*function addDeleteButton() {
-  setTimeout(function(){
-    const gridCells = document.querySelectorAll("vscode-data-grid-cell")
-    let idCounter = 0
-    for(let i = 0; i < gridCells.length-1; i++) {
-      console.log("gridCells", gridCells)
-      if(i > 3 && ((i+1) % 3 === 0)) {
-        const deleteButton = document.createElement("vscode-button")
-        deleteButton.setAttribute("appearance", "secondary")
-        deleteButton.setAttribute("name", "delete-var")
-        deleteButton.textContent = "Delete"
-        deleteButton.setAttribute("id", idCounter)
-        deleteButton.onclick = () => {onDeleteVar(idCounter-3)}
-        idCounter += 1
-        console.log("gridCells[i]", gridCells[i], i)
-        gridCells[i].shadowRoot.appendChild(deleteButton)
-      }
-    }
-  }, 2000)
-}*/
-
 function addVariable() {
   const dataGrid = document.getElementById("variables");
   const varName = document.getElementById("varName").value;
@@ -60,20 +39,13 @@ function addVariable() {
         ${varVal}
       </vscode-data-grid-cell>
       <vscode-data-grid-cell grid-column="3">
-        <vscode-button 
-        appearance="secondary" 
+        <vscode-button
+        appearance="secondary"
         name="delete-var"
         onclick="(() => {document.getElementById('${rowId}').remove()})()"
         >Delete</vscode-button>
       </vscode-data-grid-cell>`;
     dataGrid.append(row);
-    // dataGrid.rowsData = [...dataGrid.rowsData,
-    //   { id: 1,
-    //     name: varName,
-    //     value: varVal
-    //   }
-    // ];
-    // addDeleteButton()
   }
 }
 

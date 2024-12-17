@@ -5,16 +5,4 @@ window.addEventListener("load", main);
 
 function main() {
   const dataGrid = document.getElementById("variables") as DataGrid;
-  /*dataGrid.rowsData = [
-    {
-      name: "",
-      value: ""
-    }
-  ];
-  dataGrid.columnDefinitions = [
-    { columnDataKey: "name", title: "Name" },
-    { columnDataKey: "value", title: "Value" },
-    { columnDataKey: "delete", title: "" }
-  ];
-  */
 }
