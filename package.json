@@ -221,7 +221,8 @@
     ]
   },
   "scripts": {
-    "lint": "prettier --write . && eslint .",
+    "lint": "prettier . && eslint .",
+    "lint:fix": "prettier --write . && eslint --fix .",
     "compile": "node ./esbuild.js",
     "pretest": "npm run lint",
     "test": "node ./test/runTest.js",
@@ -230,7 +231,8 @@
     "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
     "prevsce": "npm run compile -- --minify",
     "vsce": "vsce package",
-    "publish": "vsce publish"
+    "publish": "vsce publish",
+    "prepare": "husky"
   },
   "dependencies": {
     "@azure/openai": "^1.0.0-beta.12",
@@ -251,6 +253,8 @@
     "eslint": "^8.41.0",
     "eslint-config-prettier": "^8.8.0",
     "glob": "^8.1.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11",
     "mocha": "^10.2.0",
     "prettier": "^2.8.8",
     "typescript": "^4.1.6"
