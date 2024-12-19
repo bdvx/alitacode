@@ -1,16 +1,14 @@
-import {getUri} from "../utils/getUri";
-import {createPrompt} from "../commands";
+import { getUri } from "../utils/getUri";
+import { createPrompt } from "../commands";
 
 const vscode = require("vscode");
-const fs = require('fs')
-const path = require('path')
-
+const fs = require("fs");
+const path = require("path");
 
 export class CreatePromptPanel {
-
   constructor(panel, extensionUri) {
     this._panel = panel;
-    this._disposables = []
+    this._disposables = [];
     this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
     this._panel.webview.html = this._getWebviewContent(this._panel.webview, extensionUri);
   }
@@ -21,26 +19,26 @@ export class CreatePromptPanel {
     } else {
       const panel = vscode.window.createWebviewPanel("alitacode", "Create Prompt", vscode.ViewColumn.One, {
         enableScripts: true,
-        localResourceRoots: [vscode.Uri.joinPath(context.extensionUri, "out")]
+        localResourceRoots: [vscode.Uri.joinPath(context.extensionUri, "out")],
       });
 
       CreatePromptPanel.currentPanel = new CreatePromptPanel(panel, context.extensionUri);
-      CreatePromptPanel.currentPanel._addReceiveMessageHandler(context, workspaceServicePrompts)
+      CreatePromptPanel.currentPanel._addReceiveMessageHandler(context, workspaceServicePrompts);
     }
   }
 
   _addReceiveMessageHandler(context, workspaceServicePrompts) {
     CreatePromptPanel.currentPanel._panel.webview.onDidReceiveMessage(
-        async message => {
-          switch (message.command) {
-            case "save":
-              await createPrompt(workspaceServicePrompts, message.promptSettings)
-              vscode.window.showInformationMessage( "Prompt saved!");
-              return;
-          }
-        },
-        undefined,
-        context.subscriptions
+      async (message) => {
+        switch (message.command) {
+          case "save":
+            await createPrompt(workspaceServicePrompts, message.promptSettings);
+            vscode.window.showInformationMessage("Prompt saved!");
+            return;
+        }
+      },
+      undefined,
+      context.subscriptions
     );
   }
 
@@ -57,10 +55,10 @@ export class CreatePromptPanel {
     }
   }
 
-   _getWebviewContent(webview, extensionUri) {
+  _getWebviewContent(webview, extensionUri) {
     const webviewUri = getUri(webview, extensionUri, ["out", "webview.js"]);
-     const htmlBody = fs.readFileSync(path.resolve(__dirname, '../panels/CreatePromptPanel.html'), 'utf8')
-     const htmlScripts = fs.readFileSync(path.resolve(__dirname, '../panels/CreatePromptPanelScripts.js'), 'utf8')
+    const htmlBody = fs.readFileSync(path.resolve(__dirname, "../panels/CreatePromptPanel.html"), "utf8");
+    const htmlScripts = fs.readFileSync(path.resolve(__dirname, "../panels/CreatePromptPanelScripts.js"), "utf8");
     return /*html*/ `
     <!DOCTYPE html>
     <html lang="en">

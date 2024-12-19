@@ -59,19 +59,21 @@ function verifyToken(parsedToken) {
 }
 
 module.exports = async function () {
-    const { workspaceService, alitaService } = require("../services");
-    const { promptLib, workspacePath, LLMProvider, verifySsl, LLMauthToken} = workspaceService.getWorkspaceConfig();
-    
-    verifyToken(parseJwt(LLMauthToken));
-    https.globalAgent.options.rejectUnauthorized = verifySsl;
-    await vscode.commands.executeCommand("setContext", "alitacode.LLMProvider", LLMProvider);
-    await vscode.commands.executeCommand("setContext", 
-        "alitacode.LocalPrompts", !LOCAL_PROMPTS_BLOCKERS.includes(LLMProvider));
-    alitaService.serviceProvider = undefined
-    if (promptLib && fs.existsSync(path.join(workspacePath, promptLib, "./prompts.json"))) {
-      await vscode.commands.executeCommand("setContext", "alita.init", true);
-      return await workspaceService.updatePrompts();
-    } else {
-      return await vscode.commands.executeCommand("setContext", "alita.init", false);
-    }
-}
+  const { workspaceService, alitaService } = require("../services");
+  const { promptLib, workspacePath, LLMProvider, verifySsl, LLMauthToken } = workspaceService.getWorkspaceConfig();
+  verifyToken(parseJwt(LLMauthToken));
+  https.globalAgent.options.rejectUnauthorized = verifySsl;
+  await vscode.commands.executeCommand("setContext", "alitacode.LLMProvider", LLMProvider);
+  await vscode.commands.executeCommand(
+    "setContext",
+    "alitacode.LocalPrompts",
+    !LOCAL_PROMPTS_BLOCKERS.includes(LLMProvider)
+  );
+  alitaService.serviceProvider = undefined;
+  if (promptLib && fs.existsSync(path.join(workspacePath, promptLib, "./prompts.json"))) {
+    await vscode.commands.executeCommand("setContext", "alita.init", true);
+    return await workspaceService.updatePrompts();
+  } else {
+    return await vscode.commands.executeCommand("setContext", "alita.init", false);
+  }
+};

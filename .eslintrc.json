@@ -38,5 +38,6 @@
       }
     ]
   },
+  "ignorePatterns": ["node_modules/", "out/"],
   "extends": ["prettier"]
 }

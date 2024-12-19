@@ -24,12 +24,12 @@ const {
   initAlita,
   syncPrompts,
   onConfigChange,
-  getAvailableAIModels
+  getAvailableAIModels,
 } = require("./commands");
 import { CreatePromptPanel } from "./panels/CreatePromptPanel";
 const OutputService = require("./services/output.service");
 
-async function activate(context){
+async function activate(context) {
   await vscode.commands.executeCommand("setContext", "alitacode.ExtentablePlatforms", EXTERNAL_PROMPTS_PROVIDERS);
   try {
     await onConfigChange();
@@ -47,11 +47,9 @@ async function activate(context){
 
   const syncPromptsSub = vscode.commands.registerCommand(COMMAND.SYNC_PROMPTS, syncPrompts);
 
-  const createPromptSub = vscode.commands.registerCommand(
-      COMMAND.CREATE_PROMPT,
-      () => {
-        CreatePromptPanel.render(context, workspaceService.promptsList);
-      })
+  const createPromptSub = vscode.commands.registerCommand(COMMAND.CREATE_PROMPT, () => {
+    CreatePromptPanel.render(context, workspaceService.promptsList);
+  });
 
   const addContextSub = vscode.commands.registerCommand(
     COMMAND.ADD_CONTEXT,
@@ -63,15 +61,9 @@ async function activate(context){
     addExample.bind(null, workspaceService.promptsList)
   );
 
-  const addGoodPredictionSub = vscode.commands.registerCommand(
-    COMMAND.ADD_GOOD_PREDICTION,
-    addGoodPrediction
-  );
+  const addGoodPredictionSub = vscode.commands.registerCommand(COMMAND.ADD_GOOD_PREDICTION, addGoodPrediction);
 
-  const getAvailableModelsSub = vscode.commands.registerCommand(
-    COMMAND.GET_AVAILABLE_AI_MODELS,
-    getAvailableAIModels
-  );
+  const getAvailableModelsSub = vscode.commands.registerCommand(COMMAND.GET_AVAILABLE_AI_MODELS, getAvailableAIModels);
 
   context.subscriptions.push(predictSub);
   context.subscriptions.push(createPromptSub);

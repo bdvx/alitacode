@@ -1,16 +1,16 @@
 <vscode-text-field name="promptName">Name</vscode-text-field>
-<br/>
+<br />
 <vscode-text-field name="promptDescription">Description</vscode-text-field>
-<br/>
+<br />
 <vscode-text-area name="context" rows="4" cols="50">Context</vscode-text-area>
-<br/>
+<br />
 <label>
   Variables
-  <br/>
+  <br />
   <vscode-text-field id="varName">Name</vscode-text-field>
   <vscode-text-field id="varVal">Value</vscode-text-field>
-  <vscode-button style="position: relative;top: -12px;" appearance="secondary" name="add-var"
-                 onclick="addVariable()">Add
+  <vscode-button style="position: relative; top: -12px" appearance="secondary" name="add-var" onclick="addVariable()"
+    >Add
   </vscode-button>
   <vscode-data-grid id="variables" aria-label="Basic">
     <vscode-data-grid-row row-type="header">
@@ -20,21 +20,20 @@
     </vscode-data-grid-row>
   </vscode-data-grid>
 </label>
-<br/>
+<br />
 <label>
-  <vscode-checkbox id="useProjectIntegration" onclick="useProjectIntegrationFields(this)"
-                   class="ws-input"/>
+  <vscode-checkbox id="useProjectIntegration" onclick="useProjectIntegrationFields(this)" class="ws-input" />
   Use project integration settings in context file
 </label>
-<br/>
+<br />
 <vscode-text-field disabled="true" name="LLMModelName">Model</vscode-text-field>
-<br/>
+<br />
 <vscode-text-field disabled="true" name="topP">Top P</vscode-text-field>
-<br/>
+<br />
 <vscode-text-field disabled="true" name="topK">Top K</vscode-text-field>
-<br/>
+<br />
 <vscode-text-field disabled="true" name="temperature">Temperature</vscode-text-field>
-<br/>
+<br />
 <vscode-text-field disabled="true" name="maxTokens">Max Tokens</vscode-text-field>
-<br/>
+<br />
 <vscode-button appearance="primary" name="save-prompt" onclick="savePrompt()">Save</vscode-button>

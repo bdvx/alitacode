@@ -18,11 +18,7 @@ const path = require("path");
 module.exports = async function () {
   const { workspacePath, promptLib } = workspaceService.getWorkspaceConfig();
   const { selText } = windowService.getSelectedText();
-  const predictsFilePath = path.join(
-    workspacePath,
-    promptLib,
-    "./predicts.jsonl"
-  );
+  const predictsFilePath = path.join(workspacePath, promptLib, "./predicts.jsonl");
   try {
     await workspaceService.checkThatFileExists(predictsFilePath);
   } catch (error) {
