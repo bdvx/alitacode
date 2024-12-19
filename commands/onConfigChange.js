@@ -43,6 +43,7 @@ function verifyToken(parsedToken) {
     if (parsedToken.expires === undefined) return;
     if (parsedToken.expires === 'null' || parsedToken.expires === null) {
       vscode.window.showInformationMessage('Alita Code: LLMAuth Token is valid');
+      return;
     }
     let currentDate = new Date();
     let parsedDate = new Date(parsedToken.expires);
