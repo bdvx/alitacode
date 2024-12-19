@@ -22,12 +22,12 @@ function parseJwt(token) {
   try {
     if (token && /(^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+$)/.test(
         token)) {
-      var base64Url = token.split('.')[1];
-      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      var base64Url = token.split(".")[1];
+      var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
       var jsonPayload = decodeURIComponent(
-          atob(base64).split('').map(function (c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-          }).join(''));
+          atob(base64).split("").map(function (c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          }).join(""));
 
       return JSON.parse(jsonPayload);
     } else throw Error("Alita Code: Invalid LLMAuth JWT token")
@@ -41,14 +41,14 @@ function parseJwt(token) {
 function verifyToken(parsedToken) {
   if(parsedToken) {
     if (parsedToken.expires === undefined) return;
-    if (parsedToken.expires === 'null' || parsedToken.expires === null) {
-      vscode.window.showInformationMessage('Alita Code: LLMAuth Token is valid');
+    if (parsedToken.expires === "null" || parsedToken.expires === null) {
+      vscode.window.showInformationMessage("Alita Code: LLMAuth Token is valid");
       return;
     }
     let currentDate = new Date();
     let parsedDate = new Date(parsedToken.expires);
     if (currentDate.getTime() > parsedDate.getTime()) {
-      const message = 'Alita Code: LLMAuth Token expired'
+      const message = "Alita Code: LLMAuth Token expired"
       console.error(message);
       vscode.window.showErrorMessage(message);
     } else {
